@@ -1,0 +1,5 @@
+World Archive v0.99x
+Build target: Windows 11 x64 portable folder + VS Code source
+Generation baseline: v0.99w
+Key changes: vector terrain regions, dynamic coasts/lakes, river-oriented post-settlement farmland, compact advanced generator controls
+Demo: regenerated terrain, farmland, cities and all country territories

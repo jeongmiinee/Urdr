@@ -1,0 +1,319 @@
+{
+  "schemaVersion": 1,
+  "climateClasses": 31,
+  "layers": [
+    "landform",
+    "naturalCover",
+    "landUse",
+    "hydrologyCoast"
+  ],
+  "coordinatePolicy": "aggregated-statistics-only",
+  "intendedSources": [
+    "Koppen-Geiger",
+    "CHELSA/WorldClim",
+    "ESA WorldCover",
+    "Copernicus DEM",
+    "SoilGrids",
+    "HydroSHEDS",
+    "GLWD"
+  ],
+  "generatedAt": "2026-07-12T21:46:44.534Z",
+  "sampleCount": 0,
+  "priors": {
+    "Af": {
+      "jungle": 0.48,
+      "forest": 0.24,
+      "wetland": 0.09,
+      "grassland": 0.07,
+      "plain": 0.08,
+      "farmland": 0.06,
+      "rock": 0.02,
+      "mountain": 0.02
+    },
+    "Am": {
+      "jungle": 0.4,
+      "forest": 0.27,
+      "wetland": 0.09,
+      "grassland": 0.09,
+      "plain": 0.08,
+      "farmland": 0.06,
+      "rock": 0.02,
+      "mountain": 0.02
+    },
+    "Aw": {
+      "jungle": 0.2,
+      "forest": 0.22,
+      "wetland": 0.08,
+      "grassland": 0.32,
+      "plain": 0.1,
+      "farmland": 0.08,
+      "rock": 0.02,
+      "mountain": 0.02
+    },
+    "As": {
+      "jungle": 0.18,
+      "forest": 0.21,
+      "wetland": 0.08,
+      "grassland": 0.33,
+      "plain": 0.11,
+      "farmland": 0.09,
+      "rock": 0.02,
+      "mountain": 0.02
+    },
+    "BWh": {
+      "desert": 0.62,
+      "rock": 0.16,
+      "plain": 0.1,
+      "grassland": 0.04,
+      "mountain": 0.05,
+      "farmland": 0.01,
+      "wetland": 0.01,
+      "forest": 0.01
+    },
+    "BWk": {
+      "desert": 0.52,
+      "rock": 0.2,
+      "plain": 0.12,
+      "grassland": 0.05,
+      "mountain": 0.08,
+      "farmland": 0.01,
+      "wetland": 0.01,
+      "forest": 0.01
+    },
+    "BSh": {
+      "desert": 0.28,
+      "grassland": 0.3,
+      "plain": 0.2,
+      "rock": 0.08,
+      "farmland": 0.06,
+      "forest": 0.03,
+      "wetland": 0.02,
+      "mountain": 0.03
+    },
+    "BSk": {
+      "desert": 0.21,
+      "grassland": 0.34,
+      "plain": 0.22,
+      "rock": 0.09,
+      "farmland": 0.06,
+      "forest": 0.03,
+      "wetland": 0.02,
+      "mountain": 0.06
+    },
+    "Csa": {
+      "forest": 0.2,
+      "grassland": 0.26,
+      "plain": 0.2,
+      "farmland": 0.18,
+      "rock": 0.07,
+      "desert": 0.03,
+      "wetland": 0.02,
+      "mountain": 0.04
+    },
+    "Csb": {
+      "forest": 0.25,
+      "grassland": 0.25,
+      "plain": 0.18,
+      "farmland": 0.17,
+      "rock": 0.07,
+      "desert": 0.03,
+      "wetland": 0.02,
+      "mountain": 0.06
+    },
+    "Csc": {
+      "forest": 0.24,
+      "grassland": 0.2,
+      "plain": 0.13,
+      "farmland": 0.1,
+      "rock": 0.09,
+      "desert": 0.03,
+      "wetland": 0.02,
+      "mountain": 0.15,
+      "snow": 0.03
+    },
+    "Cwa": {
+      "forest": 0.3,
+      "grassland": 0.18,
+      "plain": 0.17,
+      "farmland": 0.19,
+      "wetland": 0.05,
+      "rock": 0.02,
+      "mountain": 0.05
+    },
+    "Cwb": {
+      "forest": 0.31,
+      "grassland": 0.2,
+      "plain": 0.15,
+      "farmland": 0.16,
+      "wetland": 0.05,
+      "rock": 0.02,
+      "mountain": 0.08
+    },
+    "Cwc": {
+      "forest": 0.28,
+      "grassland": 0.16,
+      "plain": 0.12,
+      "farmland": 0.1,
+      "wetland": 0.05,
+      "rock": 0.07,
+      "mountain": 0.18,
+      "snow": 0.04
+    },
+    "Cfa": {
+      "forest": 0.32,
+      "grassland": 0.18,
+      "plain": 0.18,
+      "farmland": 0.18,
+      "wetland": 0.06,
+      "rock": 0.02,
+      "mountain": 0.05
+    },
+    "Cfb": {
+      "forest": 0.34,
+      "grassland": 0.2,
+      "plain": 0.18,
+      "farmland": 0.16,
+      "wetland": 0.05,
+      "rock": 0.02,
+      "mountain": 0.05
+    },
+    "Cfc": {
+      "forest": 0.3,
+      "grassland": 0.17,
+      "plain": 0.13,
+      "farmland": 0.08,
+      "wetland": 0.07,
+      "rock": 0.06,
+      "mountain": 0.13,
+      "snow": 0.04
+    },
+    "Dsa": {
+      "forest": 0.29,
+      "grassland": 0.22,
+      "plain": 0.16,
+      "farmland": 0.12,
+      "wetland": 0.04,
+      "rock": 0.06,
+      "mountain": 0.1,
+      "snow": 0.02
+    },
+    "Dsb": {
+      "forest": 0.32,
+      "grassland": 0.2,
+      "plain": 0.14,
+      "farmland": 0.1,
+      "wetland": 0.04,
+      "rock": 0.03,
+      "mountain": 0.11,
+      "snow": 0.04
+    },
+    "Dsc": {
+      "forest": 0.39,
+      "grassland": 0.14,
+      "plain": 0.09,
+      "wetland": 0.05,
+      "rock": 0.08,
+      "mountain": 0.13,
+      "snow": 0.1
+    },
+    "Dsd": {
+      "forest": 0.34,
+      "grassland": 0.11,
+      "plain": 0.07,
+      "wetland": 0.04,
+      "rock": 0.1,
+      "mountain": 0.17,
+      "snow": 0.15
+    },
+    "Dwa": {
+      "forest": 0.33,
+      "grassland": 0.19,
+      "plain": 0.17,
+      "farmland": 0.14,
+      "wetland": 0.04,
+      "rock": 0.03,
+      "mountain": 0.06,
+      "snow": 0.02
+    },
+    "Dwb": {
+      "forest": 0.36,
+      "grassland": 0.17,
+      "plain": 0.14,
+      "farmland": 0.11,
+      "wetland": 0.04,
+      "rock": 0.03,
+      "mountain": 0.08,
+      "snow": 0.03
+    },
+    "Dwc": {
+      "forest": 0.4,
+      "grassland": 0.13,
+      "plain": 0.09,
+      "wetland": 0.05,
+      "rock": 0.07,
+      "mountain": 0.13,
+      "snow": 0.11
+    },
+    "Dwd": {
+      "forest": 0.35,
+      "grassland": 0.1,
+      "plain": 0.07,
+      "wetland": 0.04,
+      "rock": 0.1,
+      "mountain": 0.17,
+      "snow": 0.15
+    },
+    "Dfa": {
+      "forest": 0.34,
+      "grassland": 0.2,
+      "plain": 0.18,
+      "farmland": 0.13,
+      "wetland": 0.04,
+      "rock": 0.03,
+      "mountain": 0.06,
+      "snow": 0.02
+    },
+    "Dfb": {
+      "forest": 0.37,
+      "grassland": 0.18,
+      "plain": 0.15,
+      "farmland": 0.11,
+      "wetland": 0.04,
+      "rock": 0.03,
+      "mountain": 0.08,
+      "snow": 0.03
+    },
+    "Dfc": {
+      "forest": 0.44,
+      "grassland": 0.14,
+      "plain": 0.1,
+      "wetland": 0.06,
+      "rock": 0.06,
+      "mountain": 0.1,
+      "snow": 0.1
+    },
+    "Dfd": {
+      "forest": 0.38,
+      "grassland": 0.1,
+      "plain": 0.07,
+      "wetland": 0.04,
+      "rock": 0.1,
+      "mountain": 0.16,
+      "snow": 0.14
+    },
+    "ET": {
+      "snow": 0.34,
+      "rock": 0.2,
+      "plain": 0.13,
+      "grassland": 0.12,
+      "wetland": 0.05,
+      "mountain": 0.16
+    },
+    "EF": {
+      "snow": 0.68,
+      "rock": 0.12,
+      "mountain": 0.18,
+      "bedrock": 0.02
+    }
+  }
+}
