@@ -1,0 +1,14 @@
+{
+    "name": "@redblobgames/mapgen4",
+    "version": "2.0.0",
+    "private": true,
+    "type": "module",
+    "dependencies": {
+        "@redblobgames/prng": "https://github.com/redblobgames/prng",
+        "delaunator": "^5",
+        "fast-2d-poisson-disk-sampling": "^1",
+        "flatqueue": "^2",
+        "gl-matrix": "^3",
+        "simplex-noise": "^4"
+    }
+}
