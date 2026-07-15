@@ -94,7 +94,7 @@ export function syncAutoWikiArticles(project: WorldProject): WorldProject {
   const now = new Date().toISOString();
   const heraldicAssets = [...project.heraldicAssets];
   const assetIds = new Set(heraldicAssets.map((asset) => asset.id));
-  const maps = project.maps.map((map, mapIndex) => ({
+  const maps = project.maps.map((map) => ({
     ...map,
     factions: map.factions.map((faction, factionIndex) => {
       if (faction.kind !== "country") return faction;

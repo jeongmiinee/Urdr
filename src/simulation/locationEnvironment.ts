@@ -1,7 +1,6 @@
 import { createGridTransform } from "../generator/gridTransform";
 import type {
   AgricultureAssessment,
-  ClimatePreset,
   GeneratedMapData,
   MapData,
   Point,
@@ -13,6 +12,7 @@ import type {
 import { generatedAtYear, worldDayLengthMinutes, worldYearLengthDays } from "../model/world";
 import { calculatePointAssessments } from "./agriculture";
 import { climateDefinition } from "../generator/climatePresets";
+import { effectiveTerrainAt } from "../generator/agriculture";
 
 export const MONTH_LABELS = ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"] as const;
 
@@ -249,10 +249,6 @@ function buildMonthlySeries(data: GeneratedMapData, point: Point, year: number):
   const annualPrecipitation = Math.max(1, data.precipitationMap[index] ?? data.settings.basePrecipitationMm);
   const baseHumidity = clamp(data.relativeHumidityMap[index] ?? (data.moistureMap[index] ?? 0.5) * 100, 4, 100);
   const baseMoisture = clamp((data.moistureMap[index] ?? baseHumidity / 100) * 100, 0, 100);
-  const baseWindX = data.windXMap[index] ?? 0;
-  const baseWindY = data.windYMap[index] ?? 0;
-  const baseWindSpeed = Math.max(0.1, Math.hypot(baseWindX, baseWindY));
-  const baseWindDirection = (Math.atan2(baseWindY, baseWindX) * 180 / Math.PI + 360) % 360;
   const generatedDayLength = generatedSeasonDayLength(data, latitudeDeg);
   const localSunFraction = clamp((data.solarHoursMap[index] ?? generatedDayLength * 0.55) / Math.max(0.1, generatedDayLength), 0.08, 1.08);
   const generatedSolar = solarGeometry(latitudeDeg, representativeMonth(data.settings.season, latitudeDeg));
@@ -442,7 +438,7 @@ export function analyzeEnvironmentLocation(map: MapData, position: Point, select
     index,
     latitudeDeg: round(latitudeDeg, 2),
     elevationM: Math.round(data.elevationMap[index] ?? 0),
-    terrain: data.terrainMap[index] ?? "plain",
+    terrain: effectiveTerrainAt(data, index),
     isLand,
     currentYear: map.timeline.currentYear,
     selectedMonth: month,

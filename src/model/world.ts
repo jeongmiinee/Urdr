@@ -1,4 +1,4 @@
-export const PROGRAM_VERSION = "0.99x" as const;
+export const PROGRAM_VERSION = "1.0" as const;
 
 export type Point = { x: number; y: number };
 export type LineSegment = { start: Point; end: Point };
@@ -330,6 +330,10 @@ export type GeneratedMapData = {
   lakeSurfaceElevations: number[];
   /** 국지 해안 지도에서 환경 조건으로 생성된 실제 해안가 타일. */
   coastalTerrainMap: CoastalTerrainType[];
+  /** Natural terrain before settlement-driven land use is applied. */
+  baseTerrainMap?: TerrainType[];
+  /** Agricultural land-use intensity from 0 to 1. */
+  agricultureMap?: number[];
   terrainMap: TerrainType[];
   /** 0~1 적설 피복률. 원래 지형색과 설색을 혼합하는 데 사용한다. */
   snowCoverMap: number[];
@@ -356,6 +360,8 @@ export type GeneratedMapData = {
   generatedTerritories: GeneratedTerritoryRegion[];
   /** 래스터 지형을 연결 영역별 곡선 벡터로 변환한 렌더링용 경계. */
   surfaceRegions?: GeneratedSurfaceRegion[];
+  /** Geometry contract used to invalidate legacy surface polygons. */
+  surfaceVectorVersion?: number;
   coastline: LineSegment[];
   contours: GeneratedContourSegment[];
   rivers: GeneratedRiverSegment[];
@@ -1400,7 +1406,7 @@ export function pointInPolygon(point: Point, polygon: Point[]): boolean {
     const yj = polygon[j]?.y ?? 0;
     const intersects =
       yi > point.y !== yj > point.y &&
-      point.x < ((xj - xi) * (point.y - yi)) / Math.max(1e-9, yj - yi) + xi;
+      point.x < ((xj - xi) * (point.y - yi)) / (yj - yi) + xi;
     if (intersects) inside = !inside;
   }
   return inside;
@@ -1653,7 +1659,6 @@ export function timelineAtRangePercent(
 export function advanceTimeline(
   project: WorldProject,
   timeline: TimelineState,
-  minimumYear: number,
   maximumYear: number,
 ): TimelineState {
   const normalized = normalizeTimelineMoment(project, timeline);
@@ -2008,7 +2013,7 @@ export function activeCalendarFieldsFromTimeline(
     absoluteDay,
   );
   let remainder = dayOfYear;
-  const dateValues = profile.dateUnits.slice(1).map((unit, offset) => {
+  const dateValues = profile.dateUnits.slice(1).map((_, offset) => {
     const index = offset + 1;
     const lowerProduct = profile.dateUnits
       .slice(index + 1)
@@ -4688,12 +4693,4 @@ export function createDemoProject(): WorldProject {
     };
   });
   return project;
-}
-
-export function activeMap(project: WorldProject): MapData | null {
-  return (
-    project.maps.find((map) => map.id === project.activeMapId) ??
-    project.maps[0] ??
-    null
-  );
 }

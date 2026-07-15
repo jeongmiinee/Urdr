@@ -50,6 +50,12 @@ function scaleGeneratedMap(
     },
     worldWidth: nextWidth,
     worldHeight: nextHeight,
+    surfaceRegions: generated.surfaceRegions?.map((region) => ({
+      ...region,
+      polygons: region.polygons.map((polygon) =>
+        scalePoints(polygon, scaleX, scaleY),
+      ),
+    })),
     coastline: scaleSegments(generated.coastline, scaleX, scaleY),
     contours: scaleSegments(generated.contours, scaleX, scaleY),
     rivers: scaleSegments(generated.rivers, scaleX, scaleY),

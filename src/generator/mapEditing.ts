@@ -1,6 +1,7 @@
 import { pointInPolygon, type GeneratedMapData, type Point, type TerrainType } from "../model/world";
 import { rebuildGeneratedMapData } from "./generateWorld";
 import { createGridTransform } from "./gridTransform";
+import { normalizedAgricultureMap, normalizedNaturalTerrainMap } from "./agriculture";
 
 function cellFromPoint(data: GeneratedMapData, point: Point): { x: number; y: number } {
   const cell = createGridTransform(data.worldWidth, data.worldHeight, data.gridWidth, data.gridHeight).worldToCell(point);
@@ -29,8 +30,9 @@ export function applyTerrainBrushImmediate(data: GeneratedMapData, point: Point,
   const center = cellFromPoint(data, point);
   const { x: radiusX, y: radiusY } = brushRadiusCells(data, radiusWorld);
   const elevation = [...data.elevationMap];
-  const terrain = [...data.terrainMap];
-  const snowBase = [...(data.snowBaseTerrainMap ?? data.terrainMap)];
+  const terrain = normalizedNaturalTerrainMap(data);
+  const agriculture = normalizedAgricultureMap(data);
+  const snowBase = [...(data.snowBaseTerrainMap ?? terrain)];
   const snowCover = [...(data.snowCoverMap ?? new Array(data.terrainMap.length).fill(0))];
   for (let y = Math.max(0, center.y - radiusY); y <= Math.min(data.gridHeight - 1, center.y + radiusY); y += 1) {
     for (let x = Math.max(0, center.x - radiusX); x <= Math.min(data.gridWidth - 1, center.x + radiusX); x += 1) {
@@ -38,13 +40,17 @@ export function applyTerrainBrushImmediate(data: GeneratedMapData, point: Point,
       const dy = (y - center.y) / radiusY;
       if (dx * dx + dy * dy > 1) continue;
       const index = y * data.gridWidth + x;
-      terrain[index] = terrainType;
-      snowBase[index] = terrainType === "snow" ? (snowBase[index] ?? "mountain") : terrainType;
+      if (terrainType === "farmland") agriculture[index] = 1;
+      else {
+        terrain[index] = terrainType;
+        agriculture[index] = 0;
+      }
+      snowBase[index] = terrainType === "snow" ? (snowBase[index] ?? "mountain") : terrain[index];
       snowCover[index] = terrainType === "snow" ? 1 : 0;
       if (elevation[index] > data.seaLevel) elevation[index] = Math.max(elevation[index], terrainElevationFloor(terrainType, data.seaLevel));
     }
   }
-  return { ...data, elevationMap: elevation, terrainMap: terrain, snowBaseTerrainMap: snowBase, snowCoverMap: snowCover, generatedAt: new Date().toISOString() };
+  return { ...data, elevationMap: elevation, baseTerrainMap: [...terrain], agricultureMap: agriculture, terrainMap: terrain, snowBaseTerrainMap: snowBase, snowCoverMap: snowCover, generatedAt: new Date().toISOString() };
 }
 
 /** 고도 붓의 즉시 미리보기. 파생 데이터는 별도 작업 큐에서 다시 계산한다. */
@@ -71,19 +77,24 @@ export function applyTerrainBrush(data: GeneratedMapData, point: Point, radiusWo
   const center = cellFromPoint(data, point);
   const { x: radiusX, y: radiusY } = brushRadiusCells(data, radiusWorld);
   const elevation = [...data.elevationMap];
-  const terrain = [...data.terrainMap];
+  const terrain = normalizedNaturalTerrainMap(data);
+  const agriculture = normalizedAgricultureMap(data);
   for (let y = Math.max(0, center.y - radiusY); y <= Math.min(data.gridHeight - 1, center.y + radiusY); y += 1) {
     for (let x = Math.max(0, center.x - radiusX); x <= Math.min(data.gridWidth - 1, center.x + radiusX); x += 1) {
       const dx = (x - center.x) / radiusX;
       const dy = (y - center.y) / radiusY;
       if (dx * dx + dy * dy > 1) continue;
       const index = y * data.gridWidth + x;
-      terrain[index] = terrainType;
+      if (terrainType === "farmland") agriculture[index] = 1;
+      else {
+        terrain[index] = terrainType;
+        agriculture[index] = 0;
+      }
       // 수면 아래에서는 해저 지형만 바꾸고 지표를 강제로 솟게 하지 않는다.
       if (elevation[index] > data.seaLevel) elevation[index] = Math.max(elevation[index], terrainElevationFloor(terrainType, data.seaLevel));
     }
   }
-  return rebuildGeneratedMapData(data, elevation, terrain, data.seaLevel);
+  return rebuildGeneratedMapData(data, elevation, terrain, data.seaLevel, agriculture);
 }
 
 export function applyElevationBrush(data: GeneratedMapData, point: Point, radiusWorld: number, delta: number): GeneratedMapData {

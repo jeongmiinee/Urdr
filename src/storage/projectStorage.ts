@@ -20,45 +20,16 @@ import {
 import { syncAutoWikiArticles } from "../model/wikiSync";
 import { calculateEnvironment } from "../generator/environment";
 import { normalizePowerOfTwo } from "../generator/gridTransform";
+import { hasValidSurfaceGeometry, refreshSurfaceRegions } from "../generator/surfaceVectors";
+import {
+  LEGACY_PROJECT_PREFIXES,
+  PROJECT_PREFIX,
+  readProjectIndex,
+  writeProjectIndex,
+  type RecentProject,
+} from "./projectIndex";
 
-const INDEX_KEY = "world-map-editor-v0.99-index";
-const LEGACY_INDEX_KEYS = [
-  "world-map-editor-v0.97-index",
-  "world-map-editor-v0.96-index",
-  "world-map-editor-v0.95-index",
-  "world-map-editor-v0.94-index",
-  "world-map-editor-v0.93-index",
-  "world-map-editor-v0.92-index",
-  "world-map-editor-v0.91-index",
-  "world-map-editor-v0.9-index",
-  "world-map-editor-v0.8-index",
-  "world-map-editor-v0.7-index",
-  "world-map-editor-v0.6-index",
-  "world-map-editor-v0.5-index",
-  "world-map-editor-v0.4-index",
-];
-const PROJECT_PREFIX = "world-map-editor-v0.99-project-";
-const LEGACY_PROJECT_PREFIXES = [
-  "world-map-editor-v0.97-project-",
-  "world-map-editor-v0.96-project-",
-  "world-map-editor-v0.95-project-",
-  "world-map-editor-v0.94-project-",
-  "world-map-editor-v0.93-project-",
-  "world-map-editor-v0.92-project-",
-  "world-map-editor-v0.91-project-",
-  "world-map-editor-v0.9-project-",
-  "world-map-editor-v0.8-project-",
-  "world-map-editor-v0.7-project-",
-  "world-map-editor-v0.6-project-",
-  "world-map-editor-v0.5-project-",
-  "world-map-editor-v0.4-project-",
-];
-
-export type RecentProject = {
-  id: string;
-  title: string;
-  lastModifiedDate: string;
-};
+export type { RecentProject } from "./projectIndex";
 
 function normalizeGenerationAlgorithm(
   value: unknown,
@@ -72,30 +43,8 @@ function normalizeGenerationAlgorithm(
   return "perlin";
 }
 
-function parseIndex(key: string): RecentProject[] {
-  const raw = localStorage.getItem(key);
-  if (!raw) return [];
-  try {
-    return JSON.parse(raw) as RecentProject[];
-  } catch {
-    return [];
-  }
-}
-
-function readIndex(): RecentProject[] {
-  const items = [
-    parseIndex(INDEX_KEY),
-    ...LEGACY_INDEX_KEYS.map(parseIndex),
-  ].flat();
-  return Array.from(new Map(items.map((item) => [item.id, item])).values());
-}
-
-function writeIndex(items: RecentProject[]): void {
-  localStorage.setItem(INDEX_KEY, JSON.stringify(items.slice(0, 12)));
-}
-
 export function listRecentProjects(): RecentProject[] {
-  return readIndex().sort((a, b) =>
+  return readProjectIndex().sort((a, b) =>
     b.lastModifiedDate.localeCompare(a.lastModifiedDate),
   );
 }
@@ -114,9 +63,9 @@ export function saveProject(project: WorldProject): WorldProject {
       title: saved.title,
       lastModifiedDate: saved.lastModifiedDate,
     },
-    ...readIndex().filter((item) => item.id !== saved.id),
+    ...readProjectIndex().filter((item) => item.id !== saved.id),
   ];
-  writeIndex(next);
+  writeProjectIndex(next);
   return saved;
 }
 
@@ -139,7 +88,7 @@ export function deleteProject(projectId: string): void {
   localStorage.removeItem(`${PROJECT_PREFIX}${projectId}`);
   for (const prefix of LEGACY_PROJECT_PREFIXES)
     localStorage.removeItem(`${prefix}${projectId}`);
-  writeIndex(readIndex().filter((item) => item.id !== projectId));
+  writeProjectIndex(readProjectIndex().filter((item) => item.id !== projectId));
 }
 
 function normalizeLocation(value: unknown): Location {
@@ -257,6 +206,18 @@ function normalizeGeneratedData(value: GeneratedMapData): GeneratedMapData {
         ? "wetland"
         : terrain,
   ) as GeneratedMapData["terrainMap"];
+  const expectedGridSize = value.gridWidth * value.gridHeight;
+  const baseTerrainMap = (
+    Array.isArray(value.baseTerrainMap) && value.baseTerrainMap.length === expectedGridSize
+      ? value.baseTerrainMap
+      : terrainMap
+  ).map((terrain) => terrain === "farmland" ? "plain" : terrain) as GeneratedMapData["terrainMap"];
+  const agricultureMap =
+    Array.isArray(value.agricultureMap) && value.agricultureMap.length === expectedGridSize
+      ? value.agricultureMap.map((item) => Math.max(0, Math.min(1, Number.isFinite(item) ? item : 0)))
+      : terrainMap.length === expectedGridSize
+        ? terrainMap.map((terrain) => terrain === "farmland" ? 1 : 0)
+        : new Array(expectedGridSize).fill(0);
   const environment = calculateEnvironment(
     value.elevationMap ?? [],
     value.gridWidth,
@@ -319,9 +280,14 @@ function normalizeGeneratedData(value: GeneratedMapData): GeneratedMapData {
       value.coastalTerrainMap.length === value.gridWidth * value.gridHeight
         ? value.coastalTerrainMap
         : new Array(value.gridWidth * value.gridHeight).fill("none"),
+    baseTerrainMap:
+      baseTerrainMap.length === expectedGridSize
+        ? baseTerrainMap
+        : environment.terrainMap,
+    agricultureMap,
     terrainMap:
-      terrainMap.length === value.gridWidth * value.gridHeight
-        ? terrainMap
+      baseTerrainMap.length === expectedGridSize
+        ? baseTerrainMap
         : environment.terrainMap,
     snowCoverMap:
       Array.isArray(value.snowCoverMap) &&
@@ -331,8 +297,12 @@ function normalizeGeneratedData(value: GeneratedMapData): GeneratedMapData {
     snowBaseTerrainMap:
       Array.isArray(value.snowBaseTerrainMap) &&
       value.snowBaseTerrainMap.length === value.gridWidth * value.gridHeight
-        ? (value.snowBaseTerrainMap.map((terrain) =>
-            (terrain as string) === "swamp" ? "wetland" : terrain,
+          ? (value.snowBaseTerrainMap.map((terrain, index) =>
+            (terrain as string) === "swamp"
+              ? "wetland"
+              : terrain === "farmland"
+                ? (baseTerrainMap[index] ?? "plain")
+                : terrain,
           ) as GeneratedMapData["snowBaseTerrainMap"])
         : environment.snowBaseTerrainMap,
     temperatureMap:
@@ -424,12 +394,15 @@ function normalizeGeneratedData(value: GeneratedMapData): GeneratedMapData {
       version: "0.99v-worker-territory-complete-erosion",
     },
   } as GeneratedMapData;
+  const surfaceNormalized = hasValidSurfaceGeometry(normalized)
+    ? normalized
+    : refreshSurfaceRegions(normalized, "final");
   return {
-    ...normalized,
+    ...surfaceNormalized,
     actualContinentCount:
       typeof value.actualContinentCount === "number"
         ? value.actualContinentCount
-        : countLandComponents(normalized),
+        : countLandComponents(surfaceNormalized),
   };
 }
 
@@ -726,7 +699,11 @@ function normalizeMap(value: unknown): MapData {
                     symbol: "",
                     languageArticleIds: [],
                     languageCustom:
-                      (faction.countryProfile as any)?.languages ?? "",
+                      (faction.countryProfile as
+                        | (typeof faction.countryProfile & {
+                            languages?: string;
+                          })
+                        | undefined)?.languages ?? "",
                     cultureArticleIds: [],
                     majorLocationIds: [],
                     ...(faction.countryProfile ?? {}),

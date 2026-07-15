@@ -4,6 +4,7 @@ import { getStateAtYear, isYearInRange, pointInPolygon, visibleLocations } from 
 import { limitPathCurvature, smoothPath } from "./pathSmoothing";
 import { createGridTransform, nearestPowerOfTwo } from "./gridTransform";
 import { refreshSurfaceRegions } from "./surfaceVectors";
+import { effectiveTerrainAt, normalizedNaturalTerrainMap } from "./agriculture";
 
 
 function downsampleGrid<T>(values: T[], sourceWidth: number, sourceHeight: number, targetWidth: number, targetHeight: number): T[] {
@@ -36,6 +37,8 @@ function placementResolutionSource(source: GeneratedMapData): GeneratedMapData {
     landMask: downsampleGrid(source.landMask, sw, sh, gridWidth, gridHeight),
     waterTypeMap: downsampleGrid(source.waterTypeMap, sw, sh, gridWidth, gridHeight),
     coastalTerrainMap: downsampleGrid(source.coastalTerrainMap, sw, sh, gridWidth, gridHeight),
+    baseTerrainMap: source.baseTerrainMap ? downsampleGrid(source.baseTerrainMap, sw, sh, gridWidth, gridHeight) : undefined,
+    agricultureMap: source.agricultureMap ? downsampleGrid(source.agricultureMap, sw, sh, gridWidth, gridHeight) : undefined,
     terrainMap: downsampleGrid(source.terrainMap, sw, sh, gridWidth, gridHeight),
     snowCoverMap: downsampleGrid(source.snowCoverMap, sw, sh, gridWidth, gridHeight),
     snowBaseTerrainMap: downsampleGrid(source.snowBaseTerrainMap, sw, sh, gridWidth, gridHeight),
@@ -65,7 +68,7 @@ function gridIndex(data: GeneratedMapData, point: Point): number {
 }
 
 export function terrainAtPoint(data: GeneratedMapData, point: Point): TerrainType {
-  return data.terrainMap[gridIndex(data, point)] ?? "plain";
+  return effectiveTerrainAt(data, gridIndex(data, point));
 }
 
 function cellIsLand(data: GeneratedMapData, index: number): boolean {
@@ -267,7 +270,7 @@ function traceMaskBoundary(mask: Uint8Array, width: number, height: number, data
   const loops: Array<Array<[number, number]>> = [];
   while (outgoing.size) {
     const firstEntry = outgoing.entries().next().value as [string, Array<[number, number]>] | undefined; if (!firstEntry) break;
-    const [startKey, firstTargets] = firstEntry; const [sx, sy] = startKey.split(",").map(Number); const loop: Array<[number, number]> = [[sx, sy]]; let currentKey = startKey; let guard = 0;
+    const [startKey] = firstEntry; const [sx, sy] = startKey.split(",").map(Number); const loop: Array<[number, number]> = [[sx, sy]]; let currentKey = startKey; let guard = 0;
     while (guard++ < width * height * 8) {
       const targets = outgoing.get(currentKey); if (!targets?.length) break; const next = targets.pop()!; if (targets.length === 0) outgoing.delete(currentKey); currentKey = edgeKey(next); loop.push(next); if (currentKey === startKey) break;
     }
@@ -898,23 +901,6 @@ function expansionStepCost(
   return base + barrier;
 }
 
-function convexHullCells(data: GeneratedMapData, seeds: number[], owner: number, voronoiOwner: Int16Array): number[] {
-  const points=seeds.map(index=>({x:index%data.gridWidth,y:Math.floor(index/data.gridWidth)}));
-  if(points.length<3)return [...new Set(seeds)];
-  const sorted=[...points].sort((a,b)=>a.x-b.x||a.y-b.y);
-  const cross=(o:{x:number;y:number},a:{x:number;y:number},b:{x:number;y:number})=>(a.x-o.x)*(b.y-o.y)-(a.y-o.y)*(b.x-o.x);
-  const lower:{x:number;y:number}[]=[];for(const point of sorted){while(lower.length>=2&&cross(lower[lower.length-2],lower[lower.length-1],point)<=0)lower.pop();lower.push(point);}
-  const upper:{x:number;y:number}[]=[];for(const point of [...sorted].reverse()){while(upper.length>=2&&cross(upper[upper.length-2],upper[upper.length-1],point)<=0)upper.pop();upper.push(point);}
-  const hull=[...lower.slice(0,-1),...upper.slice(0,-1)];
-  const minX=Math.max(0,Math.floor(Math.min(...hull.map(p=>p.x)))),maxX=Math.min(data.gridWidth-1,Math.ceil(Math.max(...hull.map(p=>p.x))));
-  const minY=Math.max(0,Math.floor(Math.min(...hull.map(p=>p.y)))),maxY=Math.min(data.gridHeight-1,Math.ceil(Math.max(...hull.map(p=>p.y))));
-  const inside=(x:number,y:number)=>{let hit=false;for(let i=0,j=hull.length-1;i<hull.length;j=i++){const a=hull[i],b=hull[j];if(((a.y>y)!==(b.y>y))&&x<(b.x-a.x)*(y-a.y)/Math.max(1e-9,b.y-a.y)+a.x)hit=!hit;}return hit;};
-  const cells:number[]=[];
-  for(let y=minY;y<=maxY;y+=1)for(let x=minX;x<=maxX;x+=1){const index=y*data.gridWidth+x;if(voronoiOwner[index]===owner&&inside(x+0.5,y+0.5))cells.push(index);}
-  for(const seed of seeds)if(!cells.includes(seed))cells.push(seed);
-  return cells;
-}
-
 type TerritoryGrowthResult = {
   owner: Int16Array;
   cityCost: Float64Array;
@@ -993,69 +979,6 @@ function growTerritories(
     if (!Number.isFinite(cost[index])) cost[index] = Number.MAX_SAFE_INTEGER;
   }
   return { owner: landOwner, cityCost: cost };
-}
-
-function refillUnclaimedLand(
-  data: GeneratedMapData,
-  owner: Int16Array,
-  archetypes: CountryArchetype[],
-  voronoiOwner: Int16Array,
-  riverMask: Uint8Array,
-): Int16Array {
-  const result = new Int16Array(owner.length);
-  result.set(owner);
-  const total = result.length;
-  const cost = new Float64Array(total); cost.fill(Number.POSITIVE_INFINITY);
-  const candidateOwner = new Int16Array(total); candidateOwner.fill(-1);
-  const settled = new Uint8Array(total);
-  const heap = new RegionHeap();
-
-  for (let index = 0; index < total; index += 1) {
-    if (!cellIsLand(data, index) || result[index] >= 0) continue;
-    const x = index % data.gridWidth;
-    const y = Math.floor(index / data.gridWidth);
-    for (const [dx, dy] of EIGHT_DIRECTIONS) {
-      const nx = x + dx;
-      const ny = y + dy;
-      if (nx < 0 || ny < 0 || nx >= data.gridWidth || ny >= data.gridHeight) continue;
-      const neighbor = ny * data.gridWidth + nx;
-      const neighborOwner = result[neighbor];
-      if (neighborOwner < 0) continue;
-      const step = expansionStepCost(data, neighbor, index, neighborOwner, archetypes[neighborOwner] ?? "agrarian", riverMask, voronoiOwner, dx !== 0 && dy !== 0);
-      if (step < cost[index]) {
-        cost[index] = step;
-        candidateOwner[index] = neighborOwner;
-        heap.push({ index, owner: neighborOwner, priority: step });
-      }
-    }
-  }
-
-  while (heap.length) {
-    const current = heap.pop()!;
-    if (settled[current.index] || result[current.index] >= 0 || current.owner !== candidateOwner[current.index] || Math.abs(current.priority - cost[current.index]) > 1e-9) continue;
-    settled[current.index] = 1;
-    result[current.index] = current.owner;
-    const x = current.index % data.gridWidth;
-    const y = Math.floor(current.index / data.gridWidth);
-    for (const [dx, dy] of EIGHT_DIRECTIONS) {
-      const nx = x + dx;
-      const ny = y + dy;
-      if (nx < 0 || ny < 0 || nx >= data.gridWidth || ny >= data.gridHeight) continue;
-      const next = ny * data.gridWidth + nx;
-      if (!cellIsLand(data, next) || result[next] >= 0 || settled[next]) continue;
-      const candidate = current.priority + expansionStepCost(data, current.index, next, current.owner, archetypes[current.owner] ?? "agrarian", riverMask, voronoiOwner, dx !== 0 && dy !== 0);
-      if (candidate < cost[next] - 1e-9 || (Math.abs(candidate - cost[next]) <= 1e-9 && current.owner < candidateOwner[next])) {
-        cost[next] = candidate;
-        candidateOwner[next] = current.owner;
-        heap.push({ index: next, owner: current.owner, priority: candidate });
-      }
-    }
-  }
-
-  for (let index = 0; index < total; index += 1) {
-    if (cellIsLand(data, index) && result[index] < 0) result[index] = voronoiOwner[index];
-  }
-  return result;
 }
 
 /**
@@ -1563,12 +1486,53 @@ function waterDistanceCells(data: GeneratedMapData): Float32Array {
   return distance;
 }
 
+const urbanWoodlandProfile = {
+  capital: { radiusCells: 5, clearingChance: 0.62 },
+  city: { radiusCells: 4, clearingChance: 0.5 },
+  town: { radiusCells: 3, clearingChance: 0.3 },
+  village: { radiusCells: 2, clearingChance: 0.16 },
+} as const;
+
+/** 도시권의 자연림을 완전히 지우지 않고 중심부일수록 드물게 솎아낸다. */
+function restrainWoodlandAroundSettlements(
+  data: GeneratedMapData,
+  settlements: ReturnType<typeof visibleLocations>,
+  terrainMap: TerrainType[],
+): void {
+  for (const [settlementIndex, { state }] of settlements.entries()) {
+    const profile = urbanWoodlandProfile[state.locationType as keyof typeof urbanWoodlandProfile];
+    if (!profile) continue;
+    const center = gridCoordinates(data, state.position);
+    const population = Math.max(500, state.population ?? 2_000);
+    const populationFactor = Math.max(0.85, Math.min(1.25, Math.pow(population / 18_000, 0.08)));
+    const radius = profile.radiusCells * populationFactor;
+    const extent = Math.ceil(radius);
+    for (let y = Math.max(0, center.y - extent); y <= Math.min(data.gridHeight - 1, center.y + extent); y += 1) {
+      for (let x = Math.max(0, center.x - extent); x <= Math.min(data.gridWidth - 1, center.x + extent); x += 1) {
+        const distance = Math.hypot(x - center.x, y - center.y);
+        if (distance > radius) continue;
+        const index = y * data.gridWidth + x;
+        if (data.waterTypeMap[index] !== "land" || (terrainMap[index] !== "forest" && terrainMap[index] !== "jungle")) continue;
+        const centerWeight = 0.35 + 0.65 * (1 - distance / Math.max(1, radius));
+        const chance = profile.clearingChance * centerWeight;
+        if (deterministicPlacementRandom(index, data.settings.seed + settlementIndex * 65_537) >= chance) continue;
+        terrainMap[index] = (data.moistureMap[index] ?? 0.5) > 0.48 ? "grassland" : "plain";
+      }
+    }
+  }
+}
+
 /** 도시 형성 뒤 평원·초원 중 수계와 토양 조건이 좋은 곳만 농경지로 전환한다. */
 function cultivateFarmlandAroundSettlements(data: GeneratedMapData, map: MapData): GeneratedMapData {
   const settlements = visibleLocations(map).filter(({ state }) => ["capital", "city", "town", "village"].includes(state.locationType));
-  if (!settlements.length) return refreshSurfaceRegions({ ...data, terrainMap: data.terrainMap.map((terrain) => terrain === "farmland" ? "plain" : terrain) });
-  const terrainMap: TerrainType[] = data.terrainMap.map((terrain): TerrainType => terrain === "farmland" ? "plain" : terrain);
+  const terrainMap = normalizedNaturalTerrainMap(data);
+  const agricultureMap = new Array(terrainMap.length).fill(0);
+  if (!settlements.length) return refreshSurfaceRegions({ ...data, baseTerrainMap: [...terrainMap], agricultureMap, terrainMap });
+  restrainWoodlandAroundSettlements(data, settlements, terrainMap);
   const score = new Float32Array(terrainMap.length);
+  const owner = new Int16Array(terrainMap.length);
+  owner.fill(-1);
+  const budgets = new Int32Array(settlements.length);
   const waterDistance = waterDistanceCells(data);
   const physicalHeightKm = data.settings.mapScaleKm * data.worldHeight / Math.max(1e-9, data.worldWidth);
   const cellKmX = data.settings.mapScaleKm / data.gridWidth;
@@ -1576,18 +1540,34 @@ function cultivateFarmlandAroundSettlements(data: GeneratedMapData, map: MapData
   const meanCellKm = Math.max(0.05, (cellKmX + cellKmY) * 0.5);
   const arid = String(data.settings.climatePreset).startsWith("B") || data.settings.basePrecipitationMm < 520;
 
-  for (const { state } of settlements) {
+  for (const [settlementIndex, { state }] of settlements.entries()) {
     const center = gridCoordinates(data, state.position);
     const population = Math.max(500, state.population ?? (state.locationType === "village" ? 1800 : state.locationType === "town" ? 9000 : 35_000));
     const baseRadius = state.locationType === "capital" ? 62 : state.locationType === "city" ? 48 : state.locationType === "town" ? 31 : 18;
     const radiusKm = baseRadius * Math.max(0.78, Math.min(1.65, Math.pow(population / 18_000, 0.16)));
+    const maximumArea = state.locationType === "capital" ? 900 : state.locationType === "city" ? 600 : state.locationType === "town" ? 180 : 55;
+    budgets[settlementIndex] = Math.max(3, Math.round(Math.min(maximumArea, population * 0.004) / Math.max(0.01, cellKmX * cellKmY)));
     const radiusX = Math.ceil(radiusKm / cellKmX);
     const radiusY = Math.ceil(radiusKm / cellKmY);
     const coreKm = state.locationType === "capital" || state.locationType === "city" ? 2.4 : 1.2;
     for (let y = Math.max(1, center.y - radiusY); y <= Math.min(data.gridHeight - 2, center.y + radiusY); y += 1) {
       for (let x = Math.max(1, center.x - radiusX); x <= Math.min(data.gridWidth - 2, center.x + radiusX); x += 1) {
         const index = y * data.gridWidth + x;
-        if (data.waterTypeMap[index] !== "land" || (terrainMap[index] !== "plain" && terrainMap[index] !== "grassland")) continue;
+        const naturalTerrain = terrainMap[index];
+        if (data.waterTypeMap[index] !== "land" || !["plain", "grassland", "forest", "jungle"].includes(naturalTerrain)) continue;
+        if (naturalTerrain === "forest" || naturalTerrain === "jungle") {
+          let woodlandEdge = false;
+          for (let oy = -2; oy <= 2 && !woodlandEdge; oy += 1) {
+            for (let ox = -2; ox <= 2; ox += 1) {
+              const nearby = terrainMap[(y + oy) * data.gridWidth + x + ox];
+              if (nearby !== "forest" && nearby !== "jungle") {
+                woodlandEdge = true;
+                break;
+              }
+            }
+          }
+          if (!woodlandEdge) continue;
+        }
         const cityDistanceKm = Math.hypot((x - center.x) * cellKmX, (y - center.y) * cellKmY);
         if (cityDistanceKm < coreKm || cityDistanceKm > radiusKm) continue;
         const cityFactor = Math.max(0, 1 - cityDistanceKm / radiusKm);
@@ -1598,7 +1578,8 @@ function cultivateFarmlandAroundSettlements(data: GeneratedMapData, map: MapData
         const riverFactor = Math.exp(-Math.pow((riverKm - optimumKm) / spreadKm, 2));
         const maximumWaterDistance = arid ? 24 : 38;
         if (riverKm > maximumWaterDistance && cityDistanceKm > radiusKm * 0.28) continue;
-        const floodPenalty = riverKm < 0.7 ? 0.18 : riverKm < 1.5 ? 0.58 : 1;
+        if (riverKm < 1.2) continue;
+        const floodPenalty = riverKm < 2.2 ? 0.58 : 1;
         const left = data.elevationMap[index - 1];
         const right = data.elevationMap[index + 1];
         const up = data.elevationMap[index - data.gridWidth];
@@ -1610,30 +1591,79 @@ function cultivateFarmlandAroundSettlements(data: GeneratedMapData, map: MapData
         const climateFactor = Math.max(0, 1 - Math.abs(temperature - 15) / 27) * (0.55 + moisture * 0.55);
         const drainage = data.coastalTerrainMap[index] === "mudflat" || data.coastalTerrainMap[index] === "salt_marsh" ? 0.15 : 1;
         const waterWeight = arid ? 0.88 : 0.64;
-        const suitability = cityFactor * 0.38 + riverFactor * waterWeight + slopeFactor * 0.2 + climateFactor * 0.16;
-        score[index] = Math.max(score[index], suitability * floodPenalty * drainage);
+        const clearingFactor = naturalTerrain === "forest" ? 0.67 : naturalTerrain === "jungle" ? 0.42 : 1;
+        const suitability = (cityFactor * 0.46 + riverFactor * waterWeight + slopeFactor * 0.24 + climateFactor * 0.18) * clearingFactor * floodPenalty * drainage;
+        if (suitability > score[index]) {
+          score[index] = suitability;
+          owner[index] = settlementIndex;
+        }
       }
     }
   }
 
-  for (let index = 0; index < terrainMap.length; index += 1) {
-    if (score[index] <= 0 || (terrainMap[index] !== "plain" && terrainMap[index] !== "grassland")) continue;
-    const chance = Math.max(0, Math.min(0.78, (score[index] - 0.64) * 0.72));
-    if (deterministicPlacementRandom(index, data.settings.seed + 0x45f13) < chance) terrainMap[index] = "farmland";
-  }
-  // 무작위 점처럼 보이지 않도록 강을 따라 이어진 농경지 패치를 성장시키고 고립 셀을 제거한다.
-  for (let pass = 0; pass < 2; pass += 1) {
-    const source = [...terrainMap];
-    for (let y = 1; y < data.gridHeight - 1; y += 1) for (let x = 1; x < data.gridWidth - 1; x += 1) {
-      const index = y * data.gridWidth + x;
-      if (!["plain", "grassland", "farmland"].includes(source[index])) continue;
-      let neighbors = 0;
-      for (let oy = -1; oy <= 1; oy += 1) for (let ox = -1; ox <= 1; ox += 1) if ((ox || oy) && source[(y + oy) * data.gridWidth + x + ox] === "farmland") neighbors += 1;
-      if (source[index] === "farmland" && neighbors <= 1) terrainMap[index] = "plain";
-      else if (source[index] !== "farmland" && neighbors >= 3 && score[index] > 0.68 && deterministicPlacementRandom(index, data.settings.seed + pass * 997) < 0.48) terrainMap[index] = "farmland";
+  const selectedOwner = new Int16Array(terrainMap.length);
+  selectedOwner.fill(-1);
+  const queued = new Int16Array(terrainMap.length);
+  queued.fill(-1);
+  const neighbors = (index: number): number[] => {
+    const x = index % data.gridWidth;
+    const y = Math.floor(index / data.gridWidth);
+    const result: number[] = [];
+    for (let oy = -1; oy <= 1; oy += 1) for (let ox = -1; ox <= 1; ox += 1) {
+      if ((!ox && !oy) || x + ox < 0 || y + oy < 0 || x + ox >= data.gridWidth || y + oy >= data.gridHeight) continue;
+      result.push((y + oy) * data.gridWidth + x + ox);
+    }
+    return result;
+  };
+
+  for (let settlementIndex = 0; settlementIndex < settlements.length; settlementIndex += 1) {
+    const candidates = Array.from(score.keys())
+      .filter((index) => owner[index] === settlementIndex && score[index] > 0.64)
+      .sort((a, b) => score[b] - score[a]);
+    const seed = candidates.find((index) =>
+      neighbors(index).every((nearby) => selectedOwner[nearby] < 0),
+    );
+    if (seed === undefined) continue;
+    const frontier: number[] = [];
+    let selected = 0;
+    let clearedForest = 0;
+    let clearedJungle = 0;
+    const queue = (index: number) => {
+      if (owner[index] !== settlementIndex || score[index] <= 0.64 || selectedOwner[index] >= 0 || queued[index] === settlementIndex) return;
+      if (neighbors(index).some((nearby) => selectedOwner[nearby] >= 0 && selectedOwner[nearby] !== settlementIndex)) return;
+      queued[index] = settlementIndex;
+      frontier.push(index);
+    };
+    const accept = (index: number) => {
+      selectedOwner[index] = settlementIndex;
+      const variation = deterministicPlacementRandom(index, data.settings.seed + settlementIndex * 7919);
+      agricultureMap[index] = Math.max(0.56, Math.min(1, 0.58 + (score[index] - 0.64) * 0.46 + variation * 0.08));
+      selected += 1;
+      if (terrainMap[index] === "forest") clearedForest += 1;
+      if (terrainMap[index] === "jungle") clearedJungle += 1;
+      for (const nearby of neighbors(index)) queue(nearby);
+    };
+    accept(seed);
+    while (frontier.length > 0 && selected < budgets[settlementIndex]) {
+      let bestPosition = 0;
+      let bestScore = Number.NEGATIVE_INFINITY;
+      for (let position = 0; position < frontier.length; position += 1) {
+        const index = frontier[position];
+        const variation = deterministicPlacementRandom(index, data.settings.seed + settlementIndex * 104729) * 0.08;
+        const candidateScore = score[index] + variation;
+        if (candidateScore > bestScore) {
+          bestScore = candidateScore;
+          bestPosition = position;
+        }
+      }
+      const [index] = frontier.splice(bestPosition, 1);
+      if (terrainMap[index] === "forest" && clearedForest >= budgets[settlementIndex] * 0.22) continue;
+      if (terrainMap[index] === "jungle" && clearedJungle >= budgets[settlementIndex] * 0.04) continue;
+      accept(index);
     }
   }
-  return refreshSurfaceRegions({ ...data, terrainMap, snowBaseTerrainMap: data.snowBaseTerrainMap.map((terrain, index) => terrainMap[index] === "farmland" ? "farmland" : terrain) }, "final");
+  // 무작위 점처럼 보이지 않도록 강을 따라 이어진 농경지 패치를 성장시키고 고립 셀을 제거한다.
+  return refreshSurfaceRegions({ ...data, baseTerrainMap: [...terrainMap], agricultureMap, terrainMap }, "final");
 }
 
 /**

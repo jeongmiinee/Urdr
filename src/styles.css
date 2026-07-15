@@ -1668,7 +1668,9 @@ h1, h2, h3, h4, strong, .wiki-document-title-row h1 { color: var(--ui-title); }
 .category-node-label b { width: 10px; color: #64849a; font-weight: 500; }
 .explorer-section-description { margin: 4px 8px 10px; color: #6f8498; font-size: 8px; line-height: 1.5; }
 
-.category-document-toolbar { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px; border-bottom: 1px solid #26384a; background: #0c1723; }
+.category-document-toolbar { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px; border-bottom: 1px solid var(--ui-border); background: var(--ui-surface-soft); }
+.category-document-toolbar button:not(.primary-button) { color: var(--ui-text); border-color: var(--ui-border); background: var(--ui-surface); }
+:root[data-theme="light"] .category-document-toolbar { color: var(--ui-text); border-color: var(--ui-border); background: #f5f8fa; }
 .article-list-edit-row { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: stretch; gap: 4px; margin: 3px 6px; }
 .article-list-edit-row > button:first-child { min-width: 0; width: 100%; }
 .article-category-remove { align-self: center; height: 31px; border: 1px solid #663741; border-radius: 5px; padding: 0 7px; color: #e9a0aa; background: #26161b; font-size: 8px; }

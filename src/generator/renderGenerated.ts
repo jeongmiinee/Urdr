@@ -1,5 +1,7 @@
 import type { CoastalTerrainType, GeneratedMapData, GeneratedSurface, Point, TerrainType, TimelineState } from "../model/world";
 import { smoothPath, stitchSegments } from "./pathSmoothing";
+import { effectiveTerrainAt, naturalTerrainAt } from "./agriculture";
+import { isSafeSurfacePolygon } from "./surfaceVectors";
 
 const TERRAIN_COLORS: Record<TerrainType, [number, number, number]> = {
   mountain: [111, 96, 84],
@@ -27,15 +29,15 @@ const COASTAL_COLORS: Partial<Record<CoastalTerrainType, [number, number, number
   estuary: [74, 132, 151],
 };
 
-const SURFACE_COLORS: Record<GeneratedSurface, [number, number, number]> = {
+export const GENERATED_SURFACE_COLORS: Record<GeneratedSurface, [number, number, number]> = {
   ...TERRAIN_COLORS,
   saltwater: [38, 104, 151],
   freshwater: [56, 139, 176],
 };
 
-const SURFACE_DRAW_ORDER: GeneratedSurface[] = [
-  "saltwater", "bedrock", "rock", "mountain", "desert", "snow", "plain",
-  "grassland", "forest", "jungle", "wetland", "farmland", "freshwater",
+export const GENERATED_SURFACE_DRAW_ORDER: GeneratedSurface[] = [
+  "saltwater", "bedrock", "rock", "mountain", "desert", "snow", "plain", "grassland",
+  "forest", "jungle", "wetland", "farmland", "freshwater",
 ];
 
 /** 래스터 셀을 직접 보이지 않게 하고 연결 지형의 곡선 벡터 멀티폴리곤으로 덮어 그린다. */
@@ -49,10 +51,12 @@ export function drawGeneratedSurfaceRegions(canvas: HTMLCanvasElement, data: Gen
   context.save();
   context.globalAlpha = opacity;
   context.imageSmoothingEnabled = true;
-  for (const surface of SURFACE_DRAW_ORDER) {
-    const polygons = grouped.get(surface);
+  for (const surface of GENERATED_SURFACE_DRAW_ORDER) {
+    const polygons = grouped.get(surface)?.filter((polygon) =>
+      isSafeSurfacePolygon(data, polygon),
+    );
     if (!polygons?.length) continue;
-    const [r, g, b] = SURFACE_COLORS[surface];
+    const [r, g, b] = GENERATED_SURFACE_COLORS[surface];
     context.fillStyle = `rgb(${r},${g},${b})`;
     context.beginPath();
     for (const polygon of polygons) {
@@ -103,7 +107,13 @@ function textureNoise(x: number, y: number, seed: number): number {
 }
 
 /** 지형 데이터는 바꾸지 않고 색상 보간과 미세 명암만 고해상도로 합성한다. */
-export function createGeneratedMapCanvas(data: GeneratedMapData, maximumLiveDimension = 4096, targetWidth = 0, targetHeight = 0): HTMLCanvasElement {
+export function createGeneratedMapCanvas(
+  data: GeneratedMapData,
+  maximumLiveDimension = 4096,
+  targetWidth = 0,
+  targetHeight = 0,
+  includeSurfaceRegions = true,
+): HTMLCanvasElement {
   const sourceColors = new Uint8ClampedArray(data.gridWidth * data.gridHeight * 4);
   const submergedMask = new Uint8Array(data.gridWidth * data.gridHeight);
   for (let y = 0; y < data.gridHeight; y += 1) {
@@ -113,8 +123,9 @@ export function createGeneratedMapCanvas(data: GeneratedMapData, maximumLiveDime
       const waterType = data.waterTypeMap?.[index] ?? (elevation <= data.seaLevel ? "saltwater" : "land");
       const submerged = waterType !== "land";
       submergedMask[index] = submerged ? 1 : 0;
-      const terrain = data.terrainMap[index];
-      const baseTerrain = data.snowBaseTerrainMap?.[index] ?? terrain;
+      const terrain = effectiveTerrainAt(data, index);
+      const naturalTerrain = naturalTerrainAt(data, index);
+      const baseTerrain = terrain === "farmland" ? terrain : (data.snowBaseTerrainMap?.[index] ?? naturalTerrain);
       const terrainColor = TERRAIN_COLORS[baseTerrain] ?? TERRAIN_COLORS[terrain];
       let [baseR, baseG, baseB] = submerged
         ? waterType === "freshwater" ? [56, 139, 176] : waterColor(data.seaLevel - elevation)
@@ -181,8 +192,70 @@ export function createGeneratedMapCanvas(data: GeneratedMapData, maximumLiveDime
     }
   }
   context.putImageData(image, 0, 0);
-  drawGeneratedSurfaceRegions(canvas, data, 0.965);
+  if (includeSurfaceRegions) drawGeneratedSurfaceRegions(canvas, data, 0.965);
   return canvas;
+}
+
+/** Creates a boundary-free raster containing only continuous relief and depth shading. */
+export function createGeneratedReliefCanvas(
+  data: GeneratedMapData,
+  targetWidth = data.gridWidth,
+  targetHeight = data.gridHeight,
+): HTMLCanvasElement {
+  const canvas = document.createElement("canvas");
+  canvas.width = data.gridWidth;
+  canvas.height = data.gridHeight;
+  const context = canvas.getContext("2d");
+  if (!context) return canvas;
+  const image = context.createImageData(data.gridWidth, data.gridHeight);
+  const elevationScale = Math.max(800, data.settings.maxElevation * 0.72);
+
+  for (let y = 0; y < data.gridHeight; y += 1) {
+    for (let x = 0; x < data.gridWidth; x += 1) {
+      const index = y * data.gridWidth + x;
+      const left = data.elevationMap[y * data.gridWidth + Math.max(0, x - 1)];
+      const right =
+        data.elevationMap[y * data.gridWidth + Math.min(data.gridWidth - 1, x + 1)];
+      const up = data.elevationMap[Math.max(0, y - 1) * data.gridWidth + x];
+      const down =
+        data.elevationMap[Math.min(data.gridHeight - 1, y + 1) * data.gridWidth + x];
+      const directionalShade = Math.max(
+        -0.2,
+        Math.min(0.2, (left - right + up - down) / elevationScale),
+      );
+      const waterType =
+        data.waterTypeMap?.[index] ??
+        (data.elevationMap[index] <= data.seaLevel ? "saltwater" : "land");
+      const depthShade =
+        waterType === "saltwater"
+          ? Math.min(0.12, Math.max(0, data.seaLevel - data.elevationMap[index]) / 32_000)
+          : 0;
+      const light = Math.max(0, directionalShade) * 0.72;
+      const dark = Math.max(0, -directionalShade) * 0.82 + depthShade;
+      const useLight = light > dark;
+      const alpha = Math.min(0.2, useLight ? light : dark);
+      const offset = index * 4;
+      const channel = useLight ? 255 : 0;
+      image.data[offset] = channel;
+      image.data[offset + 1] = channel;
+      image.data[offset + 2] = channel;
+      image.data[offset + 3] = Math.round(alpha * 255);
+    }
+  }
+  context.putImageData(image, 0, 0);
+
+  const outputWidth = Math.max(1, Math.round(targetWidth));
+  const outputHeight = Math.max(1, Math.round(targetHeight));
+  if (outputWidth === canvas.width && outputHeight === canvas.height) return canvas;
+  const output = document.createElement("canvas");
+  output.width = outputWidth;
+  output.height = outputHeight;
+  const outputContext = output.getContext("2d");
+  if (!outputContext) return canvas;
+  outputContext.imageSmoothingEnabled = true;
+  outputContext.imageSmoothingQuality = "high";
+  outputContext.drawImage(canvas, 0, 0, outputWidth, outputHeight);
+  return output;
 }
 
 export function drawGeneratedPreviewOverlays(

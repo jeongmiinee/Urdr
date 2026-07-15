@@ -1,4 +1,5 @@
 import type { CoastalTerrainType, GeneratedMapData, TerrainType } from "../model/world";
+import { effectiveTerrainAt, naturalTerrainAt } from "./agriculture";
 
 export type GeneratedPreviewRaster = {
   width: number;
@@ -42,8 +43,9 @@ export function createGeneratedPreviewRaster(data: GeneratedMapData, maximumWidt
       const elevation = data.elevationMap[index] ?? data.seaLevel;
       const waterType = data.waterTypeMap?.[index] ?? (elevation <= data.seaLevel ? "saltwater" : "land");
       const submerged = waterType !== "land";
-      const terrain = data.terrainMap[index] ?? "plain";
-      const baseTerrain = data.snowBaseTerrainMap?.[index] ?? terrain;
+      const terrain = effectiveTerrainAt(data, index);
+      const naturalTerrain = naturalTerrainAt(data, index);
+      const baseTerrain = terrain === "farmland" ? terrain : (data.snowBaseTerrainMap?.[index] ?? naturalTerrain);
       let [r, g, b] = submerged
         ? waterType === "freshwater" ? [56, 139, 176] : waterColor(data.seaLevel - elevation)
         : (TERRAIN_COLORS[baseTerrain] ?? TERRAIN_COLORS[terrain]);
