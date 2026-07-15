@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { EditorTool, LayerVisibility, LocationState, MapData, MapEditorMode, PlaceName, Point, TerrainType, WorldEvent, WorldProject } from "../model/world";
-import { createId, currentEvents, generatedAtYear, getStateAtYear, getTemporalRecordAtYear, pointInPolygon, upsertTemporalStateAtYear, visibleLocations, worldYearLengthDays } from "../model/world";
+import { createId, currentEvents, generatedAtYear, getStateAtYear, pointInPolygon, upsertTemporalStateAtYear, visibleLocations, worldYearLengthDays } from "../model/world";
 import { alignMapFeaturesToGenerated, nearestGeneratedPoint, routePathOnLand } from "../generator/mapPlacement";
 import { applyElevationBrushImmediate, applySeaLevel, applyTerrainBrushImmediate, brushCirclePoints, buildTerritoryPolygon, createSmoothCurve } from "../generator/mapEditing";
 import { environmentRange, environmentValueAtTimeline, environmentUnit, type EnvironmentLayerKind } from "../generator/renderGenerated";
@@ -10,6 +10,7 @@ import { climateLayerLabel, LayerPanel } from "./LayerPanel";
 import { MapViewport } from "./MapViewport";
 import { Toolbar } from "./Toolbar";
 import { createGridTransform } from "../generator/gridTransform";
+import { effectiveTerrainAt } from "../generator/agriculture";
 
 type Props = { project: WorldProject; map: MapData; onChange: (map: MapData) => void; onOpenGenerator: () => void; onOpenWikiEntity: (entityType: "location" | "event", entityId: string) => void };
 const initialLayers: LayerVisibility = { terrain: true, contours: true, coastline: false, territories: false, rivers: true, roads: true, locations: true, labels: true, events: true, windDirection: false, countryNames: true, windSpeed: false, temperature: false, precipitation: false, humidity: false, solarHours: false, solarIrradiance: false, snowfall: false, evapotranspiration: false, soilMoisture: false };
@@ -68,14 +69,12 @@ export function MapEditorWindow({ project, map, onChange, onOpenGenerator, onOpe
   const cursorEnvironment = useMemo(() => {
     if (!cursor || !generated || generated.gridWidth <= 0 || generated.gridHeight <= 0) return null;
     const cell = createGridTransform(generated.worldWidth, generated.worldHeight, generated.gridWidth, generated.gridHeight).worldToCell(cursor);
-    const gx = cell.x;
-    const gy = cell.y;
     const index = cell.index;
     const windX = generated.windXMap[index] ?? 0;
     const windY = generated.windYMap[index] ?? 0;
     return {
       index,
-      terrain: generated.terrainMap[index] ?? "plain",
+      terrain: effectiveTerrainAt(generated, index),
       elevation: generated.elevationMap[index] ?? 0,
       temperature: environmentValueAtTimeline(generated, "temperature", index, map.timeline, worldYearLengthDays(project)),
       precipitation: environmentValueAtTimeline(generated, "precipitation", index, map.timeline, worldYearLengthDays(project)),

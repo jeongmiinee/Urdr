@@ -1,12 +1,17 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { createEmptyProject, generatedAtYear, type WorldProject } from "./model/world";
 import { syncAutoWikiArticles } from "./model/wikiSync";
 import { enforceMapPlacementConstraints } from "./generator/mapPlacement";
 import { HomeScreen } from "./components/HomeScreen";
 import { NewProjectDialog } from "./components/NewProjectDialog";
-import { WorkspaceShell } from "./components/WorkspaceShell";
 import { deleteProject, exportProjectBrowser, importProjectFile, importProjectText, listRecentProjects, loadProject, normalizeProject, saveProject, serializeProject, type RecentProject } from "./storage/projectStorage";
 import { isDesktopRuntime, loadBundledDemoText, openTextFileFromPlatform, requestQuitFromPlatform, saveTextFileToPlatform } from "./platform/runtime";
+
+const WorkspaceShell = lazy(() =>
+  import("./components/WorkspaceShell").then((module) => ({
+    default: module.WorkspaceShell,
+  })),
+);
 
 function normalizeProjectPlacement(project: WorldProject): WorldProject {
   return {
@@ -29,6 +34,11 @@ export default function App() {
 
   const refreshRecents = () => setRecents(listRecentProjects());
   useEffect(refreshRecents, []);
+  useEffect(() => {
+    if (!notice) return;
+    const timer = window.setTimeout(() => setNotice(""), 4_000);
+    return () => window.clearTimeout(timer);
+  }, [notice]);
   useEffect(() => {
     const activeTheme = project?.theme ?? theme;
     document.documentElement.dataset.theme = activeTheme;
@@ -168,16 +178,24 @@ export default function App() {
   return (
     <>
       {project ? (
-        <WorkspaceShell
-          key={project.id}
-          project={project}
-          dirty={dirty}
-          onChange={handleProjectChange}
-          onSave={handleSave}
-          onExport={() => { void requestExport(); }}
-          onImport={() => { void requestImport(); }}
-          onHome={returnToStart}
-        />
+        <Suspense
+          fallback={
+            <div className="workspace-welcome" role="status">
+              <strong>작업 공간을 불러오는 중입니다.</strong>
+            </div>
+          }
+        >
+          <WorkspaceShell
+            key={project.id}
+            project={project}
+            dirty={dirty}
+            onChange={handleProjectChange}
+            onSave={handleSave}
+            onExport={() => { void requestExport(); }}
+            onImport={() => { void requestImport(); }}
+            onHome={returnToStart}
+          />
+        </Suspense>
       ) : (
         <HomeScreen
           recents={recents}
@@ -208,7 +226,7 @@ export default function App() {
       )}
 
       <input ref={fileInputRef} hidden type="file" accept="application/json,.json" onChange={(event) => { void handleImportFile(event.target.files?.[0]); event.target.value = ""; }} />
-      {notice && <button type="button" className="toast" onClick={() => setNotice("")}>{notice}</button>}
+      {notice && <button type="button" className="toast" role="status" aria-live="polite" onClick={() => setNotice("")}>{notice}</button>}
     </>
   );
 }

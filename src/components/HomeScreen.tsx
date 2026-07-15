@@ -1,11 +1,20 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { createPortal } from "react-dom";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import type { WorldProject } from "../model/world";
 import { generatedAtYear, PROGRAM_VERSION } from "../model/world";
 import type { RecentProject } from "../storage/projectStorage";
 import { createGeneratedMapCanvas } from "../generator/renderGenerated";
-import { UPDATE_HISTORY } from "../updateHistory";
-import { SettingsScreen } from "./SettingsScreen";
+import { activeMap } from "../model/worldSelectors";
+
+const SettingsScreen = lazy(() =>
+  import("./SettingsScreen").then((module) => ({
+    default: module.SettingsScreen,
+  })),
+);
+const UpdateHistoryDialog = lazy(() =>
+  import("./UpdateHistoryDialog").then((module) => ({
+    default: module.UpdateHistoryDialog,
+  })),
+);
 
 type Props = {
   recents: RecentProject[];
@@ -27,7 +36,7 @@ type Selection = { project: WorldProject; sourceLabel: string; recentId?: string
 
 function WorldPreview({ project }: { project: WorldProject }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const map = project.maps.find((item) => item.id === project.activeMapId) ?? project.maps[0] ?? null;
+  const map = activeMap(project);
   const generated = map ? generatedAtYear(map) : null;
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -49,19 +58,7 @@ export function HomeScreen({ recents, onNew, onDemo, onChooseJson, onPreviewRece
   const [showUpdates, setShowUpdates] = useState(false);
   const [selection, setSelection] = useState<Selection | null>(null);
   const [loadError, setLoadError] = useState("");
-  const selectedMap = useMemo(() => selection?.project.maps.find((map) => map.id === selection.project.activeMapId) ?? selection?.project.maps[0] ?? null, [selection]);
-
-  useEffect(() => {
-    if (!showUpdates) return;
-    const previousOverflow = document.body.style.overflow;
-    const previousPadding = document.body.style.paddingRight;
-    const scrollbar = window.innerWidth - document.documentElement.clientWidth;
-    document.body.style.overflow = "hidden";
-    if (scrollbar > 0) document.body.style.paddingRight = `${scrollbar}px`;
-    const onKey = (event: KeyboardEvent) => { if (event.key === "Escape") setShowUpdates(false); };
-    window.addEventListener("keydown", onKey);
-    return () => { document.body.style.overflow = previousOverflow; document.body.style.paddingRight = previousPadding; window.removeEventListener("keydown", onKey); };
-  }, [showUpdates]);
+  const selectedMap = useMemo(() => selection ? activeMap(selection.project) : null, [selection]);
 
   const chooseJson = async () => {
     setLoadError("");
@@ -80,7 +77,18 @@ export function HomeScreen({ recents, onNew, onDemo, onChooseJson, onPreviewRece
     setSelection({ project, sourceLabel: "최근 파일", recentId: recent.id });
   };
 
-  if (view === "settings") return <SettingsScreen onBack={() => setView("menu")} />;
+  if (view === "settings")
+    return (
+      <Suspense
+        fallback={
+          <div className="workspace-welcome" role="status">
+            <strong>설정을 불러오는 중입니다.</strong>
+          </div>
+        }
+      >
+        <SettingsScreen onBack={() => setView("menu")} />
+      </Suspense>
+    );
 
   return (
     <main className="game-home-screen">
@@ -118,12 +126,11 @@ export function HomeScreen({ recents, onNew, onDemo, onChooseJson, onPreviewRece
       </section>
       <button type="button" className="home-theme-corner" onClick={() => onThemeChange(theme === "dark" ? "light" : "dark")}>{theme === "dark" ? "☀ 라이트 모드" : "☾ 다크 모드"}</button>
       <button type="button" className="home-version" onClick={() => setShowUpdates(true)}>{`v${PROGRAM_VERSION}`}</button>
-      {showUpdates && createPortal(<div className="update-history-backdrop" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) setShowUpdates(false); }}>
-        <section className="update-history-modal" role="dialog" aria-modal="true" aria-labelledby="update-history-title">
-          <div className="load-project-heading"><button type="button" onClick={() => setShowUpdates(false)} aria-label="업데이트 내역 닫기">×</button><div><h2 id="update-history-title">업데이트 내역</h2><p>기능·편집·성능·호환성 변경을 버전별로 확인합니다.</p></div></div>
-          <div className="update-history-list">{UPDATE_HISTORY.map((entry, index) => <details key={entry.version} open={index === 0}><summary><strong>v{entry.version}</strong><span>{index === 0 ? "현재 버전" : `${entry.changes.length}개 변경`}</span></summary><ul>{entry.changes.map((change) => <li key={change}>{change}</li>)}</ul></details>)}</div>
-        </section>
-      </div>, document.body)}
+      {showUpdates && (
+        <Suspense fallback={null}>
+          <UpdateHistoryDialog onClose={() => setShowUpdates(false)} />
+        </Suspense>
+      )}
     </main>
   );
 }

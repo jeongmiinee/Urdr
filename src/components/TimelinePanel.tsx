@@ -109,44 +109,34 @@ export function TimelinePanel({ project, timeline, minimumYear, maximumYear, eve
   const [springing, setSpringing] = useState(false);
   const trackRef = useRef<HTMLDivElement | null>(null);
   const dragBaseRef = useRef<TimelineState>(timeline);
+  const dragRatioRef = useRef(0);
   const springTimerRef = useRef<number | null>(null);
-  const frameRef = useRef<number | null>(null);
-  const pendingTimelineRef = useRef<TimelineState | null>(null);
 
   useEffect(() => () => {
     if (springTimerRef.current !== null) window.clearTimeout(springTimerRef.current);
-    if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
   }, []);
 
+  const isAnnual = timeline.precision === "year";
   const actualPosition = timelineRangePercent(project, timeline, minimumYear, maximumYear);
   const previewTimeline = yearDraftPercent === null
     ? timeline
     : snapForPrecision(project, timelineAtRangePercent(project, timeline, minimumYear, maximumYear, yearDraftPercent));
+  const displayTimeline = !isAnnual && dragging
+    ? shiftedTimeline(project, dragBaseRef.current, dragRatio)
+    : previewTimeline;
   const calendarFields = activeCalendarFieldsFromTimeline(project, timeline, selectedCalendar);
-  const isAnnual = timeline.precision === "year";
   const halfSpan = halfWindowMinutes(project, timeline.precision);
 
   const endpoints = useMemo(() => {
     if (isAnnual) {
-      const make = (year: number) => formatTimelineMoment(project, { ...timeline, currentYear: year, currentDayOfYear: 0, currentMinuteOfDay: 0, precision: "year" }, selectedCalendar);
+      const make = (year: number) => formatTimelineMoment(project, { ...displayTimeline, currentYear: year, currentDayOfYear: 0, currentMinuteOfDay: 0, precision: "year" }, selectedCalendar);
       return [make(minimumYear), make(maximumYear)] as const;
     }
-    const center = timelineAbsoluteMinute(project, timeline);
-    const left = timelineFromAbsoluteMinute(project, center - halfSpan, timeline);
-    const right = timelineFromAbsoluteMinute(project, center + halfSpan, timeline);
+    const center = timelineAbsoluteMinute(project, displayTimeline);
+    const left = timelineFromAbsoluteMinute(project, center - halfSpan, displayTimeline);
+    const right = timelineFromAbsoluteMinute(project, center + halfSpan, displayTimeline);
     return [formatTimelineMoment(project, left, selectedCalendar), formatTimelineMoment(project, right, selectedCalendar)] as const;
-  }, [project, timeline, selectedCalendar, isAnnual, halfSpan, minimumYear, maximumYear]);
-
-  const queueTimelineChange = (next: TimelineState) => {
-    pendingTimelineRef.current = next;
-    if (frameRef.current !== null) return;
-    frameRef.current = requestAnimationFrame(() => {
-      frameRef.current = null;
-      const pending = pendingTimelineRef.current;
-      pendingTimelineRef.current = null;
-      if (pending) onTimelineChange(pending);
-    });
-  };
+  }, [project, displayTimeline, selectedCalendar, isAnnual, halfSpan, minimumYear, maximumYear]);
 
   const ratioFromPointer = (clientX: number): number => {
     const rect = trackRef.current?.getBoundingClientRect();
@@ -156,8 +146,8 @@ export function TimelinePanel({ project, timeline, minimumYear, maximumYear, eve
 
   const updateElasticPosition = (clientX: number) => {
     const ratio = ratioFromPointer(clientX);
+    dragRatioRef.current = ratio;
     setDragRatio(ratio);
-    queueTimelineChange(shiftedTimeline(project, dragBaseRef.current, ratio));
   };
 
   const beginElasticDrag = (event: ReactPointerEvent<HTMLButtonElement>) => {
@@ -173,17 +163,17 @@ export function TimelinePanel({ project, timeline, minimumYear, maximumYear, eve
   const finishElasticDrag = (event?: ReactPointerEvent<HTMLButtonElement>) => {
     if (!dragging) return;
     if (event && event.currentTarget.hasPointerCapture(event.pointerId)) event.currentTarget.releasePointerCapture(event.pointerId);
-    const finalTimeline = shiftedTimeline(project, dragBaseRef.current, dragRatio);
+    const finalTimeline = shiftedTimeline(project, dragBaseRef.current, dragRatioRef.current);
     onTimelineChange(finalTimeline);
     setDragging(false);
     setSpringing(true);
+    dragRatioRef.current = 0;
     setDragRatio(0);
     springTimerRef.current = window.setTimeout(() => setSpringing(false), 420);
   };
 
   const updateYearWhileDragging = (percent: number) => {
     setYearDraftPercent(percent);
-    queueTimelineChange(snapForPrecision(project, timelineAtRangePercent(project, timeline, minimumYear, maximumYear, percent)));
   };
 
   const finishYearDrag = () => {
@@ -231,8 +221,8 @@ export function TimelinePanel({ project, timeline, minimumYear, maximumYear, eve
   const eventMarkPositions = isAnnual
     ? eventYears.filter((year) => year >= minimumYear && year <= maximumYear).map((year) => ({ year, percent: ((year - minimumYear) / Math.max(1, maximumYear - minimumYear)) * 100 }))
     : eventYears.map((year) => {
-      const eventMinute = timelineAbsoluteMinute(project, { ...timeline, currentYear: year, currentDayOfYear: 0, currentMinuteOfDay: 0 });
-      const center = timelineAbsoluteMinute(project, timeline);
+      const eventMinute = timelineAbsoluteMinute(project, { ...displayTimeline, currentYear: year, currentDayOfYear: 0, currentMinuteOfDay: 0 });
+      const center = timelineAbsoluteMinute(project, displayTimeline);
       return { year, percent: 50 + ((eventMinute - center) / Math.max(1, halfSpan)) * 50 };
     }).filter((item) => item.percent >= 0 && item.percent <= 100);
 
@@ -247,7 +237,7 @@ export function TimelinePanel({ project, timeline, minimumYear, maximumYear, eve
         <div className="timeline-labels">
           <span>{endpoints[0]}</span>
           <button type="button" className="timeline-current-moment" onClick={cyclePrecision} title="클릭하여 연도 → 월 → 주 → 일 → 시각 표시를 전환">
-            {formatTimelineMoment(project, isAnnual ? previewTimeline : timeline, selectedCalendar)}
+            {formatTimelineMoment(project, displayTimeline, selectedCalendar)}
             <small>{precisionLabel[timeline.precision]} 단위 · 클릭하여 전환</small>
           </button>
           <span>{endpoints[1]}</span>

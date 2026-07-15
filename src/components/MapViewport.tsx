@@ -10,6 +10,7 @@ import {
 import {
   createEnvironmentMapCanvas,
   createGeneratedMapCanvas,
+  createGeneratedReliefCanvas,
   createWaterOnlyCanvas,
 } from "../generator/renderGenerated";
 import { smoothPath } from "../generator/pathSmoothing";
@@ -33,28 +34,18 @@ import {
 } from "../model/world";
 import { isLandAtPoint } from "../generator/mapPlacement";
 import { dynamicWindAt } from "../simulation/locationEnvironment";
+import {
+  MAP_SCALE,
+  bitmapScaleFactor,
+  cappedLocalScale,
+  readBitmapScalingMode,
+  textResolution,
+  type BitmapScalingMode,
+} from "./mapViewportRenderConfig";
+import { boxAt, polygonArea, rectOverlap, type Rect } from "./mapViewportGeometry";
+import { createNaturalFeatureGraphics } from "./mapViewportNaturalGraphics";
+import { createGeneratedSurfaceGraphics } from "./mapViewportSurfaceGraphics";
 
-const MAP_SCALE = 8;
-function textResolution(): number {
-  return Math.max(2, Math.min(4, (window.devicePixelRatio || 1) * 2));
-}
-function cappedLocalScale(viewScale: number): number {
-  return 1 / Math.max(1, viewScale);
-}
-type BitmapScalingMode = "auto" | "1" | "2" | "4";
-function readBitmapScalingMode(): BitmapScalingMode {
-  const value = localStorage.getItem("world-archive-bitmap-scaling");
-  return value === "1" || value === "2" || value === "4" ? value : "auto";
-}
-function bitmapScaleFactor(mode: BitmapScalingMode, map: MapData): number {
-  if (mode !== "auto") return Number(mode);
-  const dpr = Math.max(1, window.devicePixelRatio || 1);
-  const basePixels = map.width * MAP_SCALE * map.height * MAP_SCALE;
-  // 자동 모드는 안정성을 위해 보통 2×를 사용하고, 아주 작은 지도와 고밀도 화면에서만 4×를 허용한다.
-  if (dpr >= 3 && basePixels <= 600_000) return 4;
-  if (dpr >= 1.35 || basePixels <= 1_600_000) return 2;
-  return 1;
-}
 const TERRAIN_COLORS: Record<string, number> = {
   mountain: 0x77645a,
   forest: 0x2d6a4f,
@@ -68,39 +59,6 @@ const TERRAIN_COLORS: Record<string, number> = {
   rock: 0x6c757d,
   bedrock: 0x4b4e52,
 };
-
-type Rect = { x: number; y: number; width: number; height: number };
-
-function polygonArea(points: Point[]): number {
-  let area = 0;
-  for (let index = 0; index < points.length; index += 1) {
-    const a = points[index];
-    const b = points[(index + 1) % points.length];
-    area += a.x * b.y - b.x * a.y;
-  }
-  return Math.abs(area) / 2;
-}
-
-function rectOverlap(a: Rect, b: Rect): number {
-  const width = Math.max(
-    0,
-    Math.min(a.x + a.width, b.x + b.width) - Math.max(a.x, b.x),
-  );
-  const height = Math.max(
-    0,
-    Math.min(a.y + a.height, b.y + b.height) - Math.max(a.y, b.y),
-  );
-  return width * height;
-}
-
-function boxAt(center: Point, width: number, height: number): Rect {
-  return {
-    x: center.x * MAP_SCALE - width / 2,
-    y: center.y * MAP_SCALE - height / 2,
-    width,
-    height,
-  };
-}
 
 function darkenColor(color: string, factor = 0.58): number {
   const value = Number.parseInt(color.replace("#", ""), 16);
@@ -320,40 +278,6 @@ function drawPolyline(
 }
 
 
-function orderedGeneratedContourPaths(segments: GeneratedMapData["contours"]): Point[][] {
-  const groups = new Map<string, GeneratedMapData["contours"]>();
-  for (const segment of segments) {
-    const key = `${segment.elevation}:${segment.curveId ?? "legacy"}`;
-    const list = groups.get(key) ?? [];
-    list.push(segment);
-    groups.set(key, list);
-  }
-  return [...groups.values()].flatMap((group) => {
-    if (group.every((segment) => segment.curveId !== undefined)) {
-      const ordered = [...group].sort((a, b) => (a.sequence ?? 0) - (b.sequence ?? 0));
-      return ordered.length ? [[ordered[0].start, ...ordered.map((segment) => segment.end)]] : [];
-    }
-    return group.map((segment) => [segment.start, segment.end]);
-  });
-}
-
-function drawCanvasSegments(
-  context: CanvasRenderingContext2D,
-  segments: Array<{ start: Point; end: Point }>,
-  strokeStyle: string,
-  lineWidth: number,
-): void {
-  if (segments.length === 0) return;
-  context.beginPath();
-  for (const segment of segments) {
-    context.moveTo(segment.start.x * MAP_SCALE, segment.start.y * MAP_SCALE);
-    context.lineTo(segment.end.x * MAP_SCALE, segment.end.y * MAP_SCALE);
-  }
-  context.strokeStyle = strokeStyle;
-  context.lineWidth = lineWidth;
-  context.stroke();
-}
-
 function displayPath(points: Point[], maximumPoints = 1800): Point[] {
   if (points.length <= maximumPoints) return points;
   const step = Math.max(1, Math.ceil(points.length / maximumPoints));
@@ -361,95 +285,6 @@ function displayPath(points: Point[], maximumPoints = 1800): Point[] {
   const last = points[points.length - 1];
   if (sampled[sampled.length - 1] !== last) sampled.push(last);
   return sampled;
-}
-
-function drawCanvasPath(
-  context: CanvasRenderingContext2D,
-  points: Point[],
-  strokeStyle: string,
-  lineWidth: number,
-  alpha = 1,
-): void {
-  const source = displayPath(points);
-  if (source.length < 2) return;
-  context.save();
-  context.globalAlpha = alpha;
-  context.beginPath();
-  context.moveTo(source[0].x * MAP_SCALE, source[0].y * MAP_SCALE);
-  for (const point of source.slice(1))
-    context.lineTo(point.x * MAP_SCALE, point.y * MAP_SCALE);
-  context.strokeStyle = strokeStyle;
-  context.lineWidth = lineWidth;
-  context.stroke();
-  context.restore();
-}
-
-function createNaturalFeatureCanvas(
-  map: MapData,
-  generated: GeneratedMapData | null,
-  layers: LayerVisibility,
-  bitmapScale: number,
-): HTMLCanvasElement {
-  const canvas = document.createElement("canvas");
-  canvas.width = Math.max(1, Math.round(map.width * MAP_SCALE * bitmapScale));
-  canvas.height = Math.max(1, Math.round(map.height * MAP_SCALE * bitmapScale));
-  const context = canvas.getContext("2d");
-  if (!context) return canvas;
-  context.scale(bitmapScale, bitmapScale);
-  context.imageSmoothingEnabled = true;
-  context.imageSmoothingQuality = "high";
-  context.lineCap = "round";
-  context.lineJoin = "round";
-
-  if (generated && layers.contours) {
-    for (const major of [false, true]) {
-      const paths = orderedGeneratedContourPaths(generated.contours.filter((line) => line.isMajor === major));
-      for (const path of paths)
-        drawCanvasPath(
-          context,
-          path,
-          major ? "rgba(55,41,30,.70)" : "rgba(73,59,48,.38)",
-          major ? 1.2 : 0.55,
-        );
-    }
-  }
-  if (generated && layers.coastline)
-    drawCanvasSegments(
-      context,
-      generated.coastline,
-      "rgba(241,245,249,.92)",
-      1.65,
-    );
-  if (generated && layers.rivers) {
-    for (const river of [...generated.rivers].sort((a, b) => a.width - b.width))
-      drawCanvasSegments(
-        context,
-        [river],
-        "rgba(76,159,219,.84)",
-        Math.max(0.75, river.width),
-      );
-  }
-  if (layers.contours)
-    for (const contour of map.contourLines)
-      drawCanvasPath(
-        context,
-        contour.points,
-        "#4c4038",
-        contour.isMajor ? 2 : 1,
-        0.75,
-      );
-  if (layers.rivers)
-    for (const river of map.rivers.filter((item) =>
-      isYearInRange(item, map.timeline.currentYear),
-    ))
-      drawCanvasPath(
-        context,
-        river.nodes,
-        "#4f9fe0",
-        Math.max(2, river.width),
-        0.95,
-      );
-  return canvas;
 }
 
 function createRoadGraphics(
@@ -852,15 +687,46 @@ export function MapViewport({
     if (generated) {
       const targetWidth = map.width * MAP_SCALE * bitmapScale;
       const targetHeight = map.height * MAP_SCALE * bitmapScale;
-      const texture = Texture.from(
-        layers.terrain
-          ? createGeneratedMapCanvas(generated, Math.max(targetWidth, targetHeight), targetWidth, targetHeight)
-          : createWaterOnlyCanvas(generated, targetWidth, targetHeight),
-      );
-      const sprite = new Sprite(texture);
-      sprite.width = map.width * MAP_SCALE;
-      sprite.height = map.height * MAP_SCALE;
-      world.addChild(sprite);
+      const hasVectorSurface =
+        (generated.surfaceRegions?.length ?? 0) > 0;
+      if (hasVectorSurface) {
+        if (layers.terrain) {
+          world.addChild(createGeneratedSurfaceGraphics(generated, MAP_SCALE));
+          const reliefSprite = new Sprite(
+            Texture.from(
+              createGeneratedReliefCanvas(generated, targetWidth, targetHeight),
+            ),
+          );
+          reliefSprite.width = map.width * MAP_SCALE;
+          reliefSprite.height = map.height * MAP_SCALE;
+          world.addChild(reliefSprite);
+        } else {
+          world.addChild(
+            createGeneratedSurfaceGraphics(generated, MAP_SCALE, {
+              surfaces: ["saltwater", "freshwater"],
+              colorOverrides: {
+                saltwater: [176, 211, 229],
+                freshwater: [185, 220, 232],
+              },
+            }),
+          );
+        }
+      } else {
+        const texture = Texture.from(
+          layers.terrain
+            ? createGeneratedMapCanvas(
+                generated,
+                Math.max(targetWidth, targetHeight),
+                targetWidth,
+                targetHeight,
+              )
+            : createWaterOnlyCanvas(generated, targetWidth, targetHeight),
+        );
+        const sprite = new Sprite(texture);
+        sprite.width = map.width * MAP_SCALE;
+        sprite.height = map.height * MAP_SCALE;
+        world.addChild(sprite);
+      }
     }
     if (generated) {
       const environmentKinds: Array<
@@ -982,13 +848,9 @@ export function MapViewport({
         );
       }
     if (layers.contours || layers.coastline || layers.rivers) {
-      const naturalTexture = Texture.from(
-        createNaturalFeatureCanvas(map, generated, layers, bitmapScale),
+      world.addChild(
+        createNaturalFeatureGraphics(map, generated, layers, viewScale),
       );
-      const naturalSprite = new Sprite(naturalTexture);
-      naturalSprite.width = map.width * MAP_SCALE;
-      naturalSprite.height = map.height * MAP_SCALE;
-      world.addChild(naturalSprite);
     }
     const territoryRows = visibleTerritories(map);
     if (layers.territories)

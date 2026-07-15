@@ -14,6 +14,7 @@ const generatorFile = path.join(buildDir, '_generate-points-file.mjs');
 await build({
   entryPoints: [path.join(source, 'generate-points-file.ts')],
   bundle: true,
+  preserveSymlinks: true,
   platform: 'node',
   format: 'esm',
   outfile: generatorFile,
@@ -24,6 +25,7 @@ await rm(generatorFile, {force: true});
 await build({
   entryPoints: [path.join(source, 'mapgen4.ts')],
   bundle: true,
+  preserveSymlinks: true,
   minify: true,
   sourcemap: true,
   outfile: path.join(buildDir, '_bundle.js'),
@@ -31,6 +33,7 @@ await build({
 await build({
   entryPoints: [path.join(source, 'worker.ts')],
   bundle: true,
+  preserveSymlinks: true,
   minify: true,
   sourcemap: true,
   outfile: path.join(buildDir, '_worker.js'),

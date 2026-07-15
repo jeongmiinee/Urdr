@@ -1,7 +1,12 @@
-import { useState, type CSSProperties } from "react";
+import { lazy, Suspense, useState, type CSSProperties } from "react";
 import { getRuntimeMetrics, type RuntimeMetrics } from "../platform/runtime";
-import { OpenSourceLicenses } from "./OpenSourceLicenses";
 import type { WorldProject } from "../model/world";
+
+const OpenSourceLicenses = lazy(() =>
+  import("./OpenSourceLicenses").then((module) => ({
+    default: module.OpenSourceLicenses,
+  })),
+);
 
 function formatKb(value: number | undefined): string {
   if (!Number.isFinite(value)) return "-";
@@ -364,7 +369,13 @@ export function SettingsScreen({
               <b>{showLicenses ? "−" : "+"}</b>
             </button>
             <div className="settings-expand-body" aria-hidden={!showLicenses}>
-              {showLicenses && <OpenSourceLicenses />}
+              {showLicenses && (
+                <Suspense
+                  fallback={<p className="empty-hint">라이선스를 불러오는 중입니다.</p>}
+                >
+                  <OpenSourceLicenses />
+                </Suspense>
+              )}
             </div>
           </section>
         </div>

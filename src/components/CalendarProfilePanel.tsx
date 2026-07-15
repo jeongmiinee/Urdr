@@ -11,6 +11,7 @@ import {
   type WikiArticle,
   type WorldProject,
 } from "../model/world";
+import { activeMap } from "../model/worldSelectors";
 
 type Props = {
   project: WorldProject;
@@ -25,7 +26,7 @@ function normalize(profile: CalendarProfile | undefined): CalendarProfile {
 
 export function CalendarProfilePanel({ project, article, editMode, onChange }: Props) {
   const profile = normalize(article.calendarProfile);
-  const activeTimeline = (project.maps.find((map) => map.id === project.activeMapId) ?? project.maps[0])?.timeline;
+  const activeTimeline = activeMap(project)?.timeline;
   const allGroups = project.maps.flatMap((map) => map.factions).filter((value, index, array) => array.findIndex((item) => item.id === value.id) === index);
   const update = (patch: Partial<CalendarProfile>) => onChange({ ...profile, ...patch });
   const yearInput = (value: number | undefined, onValue: (value: number) => void) => <input type="number" value={activeCalendarYearFromWorldYear(project, value ?? 0)} onChange={(event) => onValue(worldYearFromActiveCalendarYear(project, Number(event.target.value)))} />;

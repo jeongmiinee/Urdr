@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   EVENT_CATEGORY_LABELS,
   formatTimelineMoment,
-  getStateAtYear,
   standardDayOfYear,
   type HistoricalDateTime,
   type MapData,

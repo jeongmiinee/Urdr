@@ -4,15 +4,17 @@ const path = require('node:path');
 const { gunzipSync } = require('node:zlib');
 
 let mainWindow = null;
+const smokeTestMode = process.argv.includes('--smoke-test');
 
 function createWindow() {
   const window = new BrowserWindow({
+    show: !smokeTestMode,
     width: 1500,
     height: 940,
     minWidth: 1100,
     minHeight: 700,
     backgroundColor: '#0b111b',
-    title: 'World Archive v0.99x',
+    title: 'World Archive v1.0',
     webPreferences: {
       preload: path.join(__dirname, 'preload.cjs'),
       contextIsolation: true,
@@ -21,6 +23,13 @@ function createWindow() {
     },
   });
   const devUrl = process.env.WORLD_ARCHIVE_DEV_URL;
+  window.webContents.once('did-finish-load', () => {
+    if (smokeTestMode) app.exit(0);
+  });
+  window.webContents.once('did-fail-load', (_event, errorCode, errorDescription) => {
+    console.error(`Renderer load failed (${errorCode}): ${errorDescription}`);
+    if (smokeTestMode) app.exit(1);
+  });
   if (devUrl) window.loadURL(devUrl);
   else window.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
   mainWindow = window;

@@ -9,7 +9,6 @@ import {
   type ClimatePreset,
   type Season,
   type MapData,
-  type MapGenerationScope,
   MAP_SCALE_RANGES,
   type MapScaleMode,
   type BoundarySide,
@@ -565,7 +564,6 @@ function RealisticMapGeneratorWindow({
 
   const finalize = () => {
     if (isFinalizing) return;
-    const renderResolution = settings.renderResolution ?? 2048;
     const analysisResolution = settings.analysisResolution ?? 1024;
     if (
       analysisResolution >= 2048 &&

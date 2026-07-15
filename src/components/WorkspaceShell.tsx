@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import type {
   EventCategory,
   GeneratedMapData,
@@ -11,7 +11,6 @@ import type {
   WorldProject,
 } from "../model/world";
 import {
-  activeMap,
   advanceTimeline,
   createEmptyMap,
   createId,
@@ -20,26 +19,60 @@ import {
   upsertTemporalStateAtYear,
   type TimelineState,
 } from "../model/world";
+import { activeMap } from "../model/worldSelectors";
 import { syncAutoWikiArticles } from "../model/wikiSync";
 import {
   alignMapFeaturesToGenerated,
   applyGeneratedCountries,
   enforceMapPlacementConstraints,
 } from "../generator/mapPlacement";
-import { HistoryWindow } from "./HistoryWindow";
-import { MapEditorWindow } from "./MapEditorWindow";
-import { MapGeneratorWindow } from "./MapGeneratorWindow";
 import { ProjectExplorer } from "./ProjectExplorer";
-import { ProjectHomeWindow } from "./ProjectHomeWindow";
-import { SettingsScreen } from "./SettingsScreen";
 import { SmartLinkOverlay } from "./SmartLinkOverlay";
-import { SimulationWindow } from "./SimulationWindow";
 import { TabBar } from "./TabBar";
 import { TimelinePanel } from "./TimelinePanel";
-import { WikiWindow } from "./WikiWindow";
-import { HeraldryStudioModal } from "./HeraldryStudio";
-import { NewMapDialog } from "./NewMapDialog";
 import type { HeraldicAssetKind } from "../model/world";
+
+const HistoryWindow = lazy(() =>
+  import("./HistoryWindow").then((module) => ({ default: module.HistoryWindow })),
+);
+const MapEditorWindow = lazy(() =>
+  import("./MapEditorWindow").then((module) => ({
+    default: module.MapEditorWindow,
+  })),
+);
+const MapGeneratorWindow = lazy(() =>
+  import("./MapGeneratorWindow").then((module) => ({
+    default: module.MapGeneratorWindow,
+  })),
+);
+const ProjectHomeWindow = lazy(() =>
+  import("./ProjectHomeWindow").then((module) => ({
+    default: module.ProjectHomeWindow,
+  })),
+);
+const SimulationWindow = lazy(() =>
+  import("./SimulationWindow").then((module) => ({
+    default: module.SimulationWindow,
+  })),
+);
+const WikiWindow = lazy(() =>
+  import("./WikiWindow").then((module) => ({ default: module.WikiWindow })),
+);
+const HeraldryStudioModal = lazy(() =>
+  import("./HeraldryStudio").then((module) => ({
+    default: module.HeraldryStudioModal,
+  })),
+);
+const SettingsScreen = lazy(() =>
+  import("./SettingsScreen").then((module) => ({
+    default: module.SettingsScreen,
+  })),
+);
+const NewMapDialog = lazy(() =>
+  import("./NewMapDialog").then((module) => ({
+    default: module.NewMapDialog,
+  })),
+);
 
 type Props = {
   project: WorldProject;
@@ -275,7 +308,6 @@ export function WorkspaceShell({
         advanceTimeline(
           project,
           currentMap.timeline,
-          timelineBounds.minimumYear,
           timelineBounds.maximumYear,
         ),
       );
@@ -480,86 +512,94 @@ export function WorkspaceShell({
             onClose={closeTab}
           />
           <div className="document-content">
-            {!activeTab && (
-              <div className="workspace-welcome">
-                <strong>작업 창을 여세요.</strong>
-                <p>
-                  프로젝트 탐색기에서 지도, 위키, 연표 또는 지도 생성기를
-                  선택하세요.
-                </p>
-              </div>
-            )}
-            {activeTab?.type === "map" && currentMap && (
-              <MapEditorWindow
-                key={currentMap.id}
-                project={project}
-                map={currentMap}
-                onChange={updateMap}
-                onOpenGenerator={() => openTab("generator", currentMap.id)}
-                onOpenWikiEntity={openWikiEntity}
-              />
-            )}
-            {activeTab?.type === "generator" && currentMap && (
-              <MapGeneratorWindow
-                map={currentMap}
-                onApply={applyGenerated}
-                onMapChange={updateMap}
-                onOpenMap={() => openTab("map", currentMap.id)}
-              />
-            )}
-            {activeTab?.type === "wiki" && (
-              <WikiWindow
-                project={project}
-                onChange={emitChange}
-                initialCategoryId={activeTab.wikiCategoryId ?? null}
-                initialEventCategory={activeTab.wikiEventCategory ?? "all"}
-                initialArticleId={activeTab.wikiArticleId}
-                onNavigate={(target) =>
-                  setTabs((items) =>
-                    items.map((item) =>
-                      item.id === activeTab.id
-                        ? {
-                            ...item,
-                            wikiCategoryId: target.categoryId,
-                            wikiEventCategory: target.eventCategory,
-                            wikiArticleId: target.articleId,
-                            title:
-                              target.categoryId === null
-                                ? "미지정"
-                                : (project.wikiCategories.find(
-                                    (category) =>
-                                      category.id === target.categoryId,
-                                  )?.name ?? "세계관 문서"),
-                          }
-                        : item,
-                    ),
-                  )
-                }
-              />
-            )}
-            {activeTab?.type === "timeline" && currentMap && (
-              <HistoryWindow
-                project={project}
-                map={currentMap}
-                onYearChange={setYear}
-                onOpenWikiArticle={openWikiArticle}
-              />
-            )}
-            {activeTab?.type === "simulation" && currentMap && (
-              <SimulationWindow
-                project={project}
-                map={currentMap}
-                onChange={emitChange}
-              />
-            )}
-            {activeTab?.type === "home" && (
-              <ProjectHomeWindow
-                project={project}
-                map={currentMap ?? null}
-                onChange={emitChange}
-                onMapChange={updateMap}
-              />
-            )}
+            <Suspense
+              fallback={
+                <div className="workspace-welcome" role="status">
+                  <strong>작업 창을 불러오는 중입니다.</strong>
+                </div>
+              }
+            >
+              {!activeTab && (
+                <div className="workspace-welcome">
+                  <strong>작업 창을 여세요.</strong>
+                  <p>
+                    프로젝트 탐색기에서 지도, 위키, 연표 또는 지도 생성기를
+                    선택하세요.
+                  </p>
+                </div>
+              )}
+              {activeTab?.type === "map" && currentMap && (
+                <MapEditorWindow
+                  key={currentMap.id}
+                  project={project}
+                  map={currentMap}
+                  onChange={updateMap}
+                  onOpenGenerator={() => openTab("generator", currentMap.id)}
+                  onOpenWikiEntity={openWikiEntity}
+                />
+              )}
+              {activeTab?.type === "generator" && currentMap && (
+                <MapGeneratorWindow
+                  map={currentMap}
+                  onApply={applyGenerated}
+                  onMapChange={updateMap}
+                  onOpenMap={() => openTab("map", currentMap.id)}
+                />
+              )}
+              {activeTab?.type === "wiki" && (
+                <WikiWindow
+                  project={project}
+                  onChange={emitChange}
+                  initialCategoryId={activeTab.wikiCategoryId ?? null}
+                  initialEventCategory={activeTab.wikiEventCategory ?? "all"}
+                  initialArticleId={activeTab.wikiArticleId}
+                  onNavigate={(target) =>
+                    setTabs((items) =>
+                      items.map((item) =>
+                        item.id === activeTab.id
+                          ? {
+                              ...item,
+                              wikiCategoryId: target.categoryId,
+                              wikiEventCategory: target.eventCategory,
+                              wikiArticleId: target.articleId,
+                              title:
+                                target.categoryId === null
+                                  ? "미지정"
+                                  : (project.wikiCategories.find(
+                                      (category) =>
+                                        category.id === target.categoryId,
+                                    )?.name ?? "세계관 문서"),
+                            }
+                          : item,
+                      ),
+                    )
+                  }
+                />
+              )}
+              {activeTab?.type === "timeline" && currentMap && (
+                <HistoryWindow
+                  project={project}
+                  map={currentMap}
+                  onYearChange={setYear}
+                  onOpenWikiArticle={openWikiArticle}
+                />
+              )}
+              {activeTab?.type === "simulation" && currentMap && (
+                <SimulationWindow
+                  project={project}
+                  map={currentMap}
+                  onChange={emitChange}
+                />
+              )}
+              {activeTab?.type === "home" && (
+                <ProjectHomeWindow
+                  project={project}
+                  map={currentMap ?? null}
+                  onChange={emitChange}
+                  onMapChange={updateMap}
+                />
+              )}
+            </Suspense>
           </div>
         </section>
       </div>
@@ -600,31 +640,38 @@ export function WorkspaceShell({
         </span>
       </div>
       <SmartLinkOverlay project={project} onChange={emitChange} />
-      {heraldryStudio && (
-        <HeraldryStudioModal
-          project={project}
-          kind={heraldryStudio}
-          onChange={emitChange}
-          onClose={() => setHeraldryStudio(null)}
-        />
-      )}
-      {showSettings && (
-        <div className="settings-modal-backdrop" role="dialog" aria-modal="true" aria-label="설정">
-          <SettingsScreen
-            embedded
-            onBack={() => setShowSettings(false)}
+      <Suspense fallback={null}>
+        {heraldryStudio && (
+          <HeraldryStudioModal
             project={project}
-            onProjectChange={emitChange}
+            kind={heraldryStudio}
+            onChange={emitChange}
+            onClose={() => setHeraldryStudio(null)}
           />
-        </div>
-      )}
-      {showNewMapDialog && (
-        <NewMapDialog
-          suggestedName={`새 지도 ${project.maps.length + 1}`}
-          onCancel={() => setShowNewMapDialog(false)}
-          onCreate={addMap}
-        />
-      )}
+        )}
+        {showSettings && (
+          <div
+            className="settings-modal-backdrop"
+            role="dialog"
+            aria-modal="true"
+            aria-label="설정"
+          >
+            <SettingsScreen
+              embedded
+              onBack={() => setShowSettings(false)}
+              project={project}
+              onProjectChange={emitChange}
+            />
+          </div>
+        )}
+        {showNewMapDialog && (
+          <NewMapDialog
+            suggestedName={`새 지도 ${project.maps.length + 1}`}
+            onCancel={() => setShowNewMapDialog(false)}
+            onCreate={addMap}
+          />
+        )}
+      </Suspense>
     </div>
   );
 }
