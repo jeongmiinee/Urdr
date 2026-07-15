@@ -1,0 +1,6 @@
+World Archive v1.0
+Build target: Windows 11 x64 portable client, VS Code source, GitHub-ready source
+Surface vector schema: 4
+Demo grid: 512 x 256
+Demo render target: 2048 x 1024
+Bundled demo: 5 countries, 42 locations, 17 events, 126 wiki articles

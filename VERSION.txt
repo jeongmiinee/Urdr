@@ -1,2 +1,2 @@
-World Archive v0.99x
+World Archive v1.0
 Windows 11 x64 / VS Code source

@@ -1,7 +1,8 @@
 {
-  "name": "world-map-editor-v0.99x",
+  "name": "world-archive",
+  "productName": "World Archive",
   "private": true,
-  "version": "0.99.0-beta.27",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "npm run build:mapgen4 && vite",
@@ -10,24 +11,25 @@
     "preview": "vite preview",
     "desktop": "npm run build && electron .",
     "desktop:dev": "node desktop/dev.cjs",
-    "smoke": "node --expose-gc --import tsx scripts/smoke-0.99x.ts",
+    "desktop:smoke": "electron . --smoke-test",
+    "smoke": "node --expose-gc --import tsx scripts/smoke-1.0.ts",
     "build:mapgen4": "node scripts/build-mapgen4.mjs",
-    "demo": "node --import tsx scripts/build-demo-0.99x.ts",
+    "demo": "node --import tsx scripts/build-demo-1.0.ts",
     "terrain:atlas": "node --import tsx scripts/build-terrain-atlas.ts",
-    "worker:smoke": "node --import tsx scripts/worker-smoke-0.99x.ts"
+    "worker:smoke": "node --import tsx scripts/worker-smoke-1.0.ts"
   },
   "dependencies": {
-    "d3-delaunay": "^6.0.4",
-    "pixi.js": "^8.19.0",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7",
     "@redblobgames/prng": "file:vendor/prng",
+    "d3-delaunay": "^6.0.4",
     "delaunator": "^5.0.1",
     "fast-2d-poisson-disk-sampling": "^1.0.3",
     "flatqueue": "^2.0.3",
     "gl-matrix": "^3.4.4",
-    "simplex-noise": "^4.0.3",
-    "hash-int": "^1.0.0"
+    "hash-int": "^1.0.0",
+    "pixi.js": "^8.19.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "simplex-noise": "^4.0.3"
   },
   "devDependencies": {
     "@types/d3-delaunay": "^6.0.4",
@@ -35,10 +37,10 @@
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.3",
     "electron": "^43.1.0",
+    "esbuild": "^0.28.1",
     "tsx": "^4.23.0",
     "typescript": "^7.0.2",
-    "vite": "^8.1.4",
-    "esbuild": "^0.28.1"
+    "vite": "^8.1.4"
   },
   "main": "desktop/main.cjs"
 }
