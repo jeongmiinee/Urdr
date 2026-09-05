@@ -1,0 +1,18 @@
+URDR Engine 4.4
+Native crate: urdr-native 4.4.0
+Target: Windows x86_64, Rust MSVC
+Renderer/UI: eframe + egui + WGPU
+Process model: single native process
+Portable entry point: URDR.exe
+Command launcher: not included
+Project storage: %LOCALAPPDATA%\URDR\Projects
+Runtime logs: portable Logs folder, with %LOCALAPPDATA%\URDR\Logs fallback
+Map generation: cancellable Region worker with staged diagnostics and bounded asynchronous rendering
+Terrain recipe: revision 2 continuous geology guide plus parent-constrained spherical residual
+Physical analysis: global L0 authority plus deterministic sparse L1/L2 refinement
+Hydrology: macro-authoritative basin graph plus continuous subcell river geometry
+Save compatibility: missing terrain recipe metadata remains revision 1
+Territory rendering: empty-owner fast path plus bounded canonical LOD mask
+Environment model: regional analysis and area-weighted whole-planet analysis
+Speech: bundled IMS-Toucan offline IPA synthesis
+Artifacts: Windows x64 portable folder and ZIP only

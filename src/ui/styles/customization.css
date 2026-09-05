@@ -1,0 +1,275 @@
+/* User-facing extension layer kept separate from legacy component styles. */
+
+:root[data-theme="light"] .boundary-direction {
+  border-color: #aebdca;
+  color: #183747;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(31, 55, 73, .08);
+}
+
+:root[data-theme="light"] .boundary-direction span { color: #4e687a; }
+:root[data-theme="light"] .boundary-direction.state-land {
+  border-color: #83a06f;
+  background: #edf5e8;
+}
+:root[data-theme="light"] .boundary-direction.state-water {
+  border-color: #6399b8;
+  background: #e2f2fa;
+}
+:root[data-theme="light"] .boundary-direction.state-land-water {
+  border-color: #71958d;
+  background: linear-gradient(90deg, #edf5e8 0 50%, #e2f2fa 50% 100%);
+}
+:root[data-theme="light"] .boundary-direction.state-water-land {
+  border-color: #71958d;
+  background: linear-gradient(90deg, #e2f2fa 0 50%, #edf5e8 50% 100%);
+}
+
+.wiki-current-filter {
+  font-size: .4375rem;
+  line-height: 1.2;
+}
+
+.article-list {
+  --document-title-size: 1.35rem;
+  --document-title-line-box: 1.58rem;
+  --document-row-height: calc(var(--document-title-line-box) + 22px);
+}
+
+.article-list button {
+  height: var(--document-row-height);
+  min-height: var(--document-row-height);
+  gap: 0;
+  padding: 10px 9px;
+  overflow: hidden;
+}
+
+.article-list button .article-list-title {
+  width: 100%;
+  font-size: var(--document-title-size);
+  line-height: var(--document-title-line-box);
+  white-space: nowrap;
+}
+
+.article-list button .article-list-title > .marquee-content {
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+}
+
+.article-list button:hover .marquee-viewport.overflowing .marquee-content {
+  animation: overflow-marquee var(--marquee-duration, 1.4s) linear .18s infinite alternate;
+}
+
+.article-list button:hover .marquee-viewport:not(.overflowing) .marquee-content {
+  animation: none;
+}
+
+.wiki-list-panel button.wiki-current-filter {
+  min-width: 0;
+  padding: 5px 4px;
+  overflow: hidden;
+  font-size: .4375rem;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.startup-loading-screen {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 10px;
+  width: 100%;
+  height: 100%;
+  color: var(--ui-text);
+  background: var(--ui-bg);
+}
+
+.startup-loading-screen h1,
+.startup-loading-screen p { margin: 0; }
+.startup-loading-screen h1 { font-size: 1.6rem; letter-spacing: 0; }
+.startup-loading-screen p { color: var(--ui-muted); font-size: .78rem; }
+.startup-loading-mark {
+  width: 34px;
+  height: 34px;
+  border: 3px solid var(--ui-border);
+  border-top-color: var(--ui-accent);
+  border-radius: 50%;
+  animation: startup-loading-spin .8s linear infinite;
+}
+@keyframes startup-loading-spin { to { transform: rotate(360deg); } }
+
+.home-settings-modal-backdrop {
+  position: fixed;
+  z-index: 160;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 18px;
+  overflow: hidden;
+  background: rgba(3, 9, 15, .7);
+}
+
+.home-settings-modal-dialog {
+  width: min(1000px, 96vw);
+  height: min(820px, calc(100dvh - 36px));
+  min-height: 0;
+  overflow: hidden;
+  border: 1px solid var(--ui-border);
+  border-radius: 8px;
+  background: var(--ui-bg);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, .45);
+}
+
+.home-settings-modal-dialog .settings-screen.embedded {
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+}
+
+.home-settings-modal-dialog .settings-screen-card {
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.home-settings-loading {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  color: var(--ui-muted);
+}
+
+.structured-info-panel,
+.structured-wiki-panel,
+.wiki-document-info .linked-history-section {
+  margin: 0;
+  border-radius: 6px;
+}
+
+.structured-info-heading {
+  min-height: 42px;
+  padding: 9px 11px;
+  font-family: var(--app-font-family);
+  font-weight: 400;
+}
+
+.structured-info-heading h3,
+.structured-info-heading strong,
+.structured-info-heading b { font-weight: 400; }
+
+.structured-info-row {
+  grid-template-columns: minmax(90px, 32%) minmax(0, 1fr);
+  font-family: var(--app-font-family);
+  font-size: .72rem;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.structured-info-row > span,
+.structured-info-row > div {
+  display: flex;
+  align-items: center;
+  min-height: 39px;
+}
+
+.structured-info-row > div {
+  flex-wrap: wrap;
+}
+
+.structured-info-row > span,
+.structured-info-row > div,
+.structured-info-row strong,
+.structured-info-row b,
+.structured-info-row p,
+.structured-info-row a,
+.structured-info-row button,
+.structured-info-row input,
+.structured-info-row select,
+.structured-info-row textarea,
+.structured-info-row small {
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: 400;
+  line-height: inherit;
+}
+
+.structured-info-row textarea,
+.structured-info-row .reference-picker,
+.structured-info-row .relation-picker,
+.structured-info-row .country-name-editor-row,
+.structured-info-row .event-period-stack,
+.structured-info-row .event-location-editor,
+.structured-info-row .event-date-input-wrap,
+.structured-info-row .location-metric-row { width: 100%; }
+
+.reference-picker.embedded { margin: 0; }
+.reference-picker.embedded > small { display: none; }
+.faction-territory-controls { display: flex; flex-wrap: wrap; gap: 8px 14px; }
+.faction-territory-controls .checkbox-row { margin: 0; }
+.person-genealogy-panel,
+.ownership-profile-panel,
+.location-heraldry-section,
+.faction-heraldry-section { margin: 0; }
+.event-wiki-document { padding: 0; border: 0 !important; background: transparent !important; }
+
+.genealogy-relation-editor {
+  display: grid;
+  gap: 5px;
+  min-width: min(190px, 42%);
+  margin: 0 !important;
+  color: var(--ui-muted);
+  font-size: .7rem;
+}
+
+.genealogy-children-editor {
+  width: min(520px, 100%);
+  margin-top: 8px;
+}
+
+.metric-section-heading { margin-bottom: 9px; }
+.metric-section-heading h3 { margin: 0 !important; }
+
+.wiki-navigation-bar.reading {
+  position: sticky;
+  z-index: 18;
+  top: 0;
+  margin: -22px -22px 10px;
+  padding: 11px 22px 9px;
+  background: color-mix(in srgb, var(--ui-bg) 94%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+.rpg-family-trait-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 8px;
+}
+
+.rpg-effect-summary.ungrouped { margin-top: 0; }
+.rpg-effect-summary.ungrouped > ul { margin-top: 0; }
+
+.new-project-world-settings input[role="spinbutton"][aria-invalid="true"] {
+  border-color: #b75560;
+}
+
+html,
+body,
+#root,
+.workspace-shell {
+  max-width: 100%;
+  min-width: 0;
+}
+
+.workspace-shell { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .startup-loading-mark { animation: none; }
+}

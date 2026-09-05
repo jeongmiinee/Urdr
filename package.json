@@ -1,0 +1,52 @@
+{
+  "name": "world-archive",
+  "productName": "URDR",
+  "private": true,
+  "version": "2.5.0",
+  "type": "module",
+  "scripts": {
+    "dev": "npm run build:mapgen4 && vite",
+    "build": "npm run build:mapgen4 && tsc -b && vite build",
+    "typecheck": "tsc -b",
+    "preview": "vite preview",
+    "desktop": "npm run build && electron .",
+    "desktop:dev": "node desktop/dev.cjs",
+    "desktop:smoke": "node_modules\\electron\\dist\\electron.exe . --smoke-test --disable-gpu --disable-software-rasterizer --disable-gpu-compositing --no-sandbox",
+    "smoke": "node --expose-gc --import tsx scripts/smoke-2.4.ts",
+    "regression": "node --import tsx scripts/regression-2.4.ts",
+    "ui:smoke": "node --import tsx scripts/ui-smoke-2.4.tsx",
+    "localization:audit": "node --import tsx scripts/localization-audit-2.4.ts",
+    "build:mapgen4": "node scripts/build-mapgen4.mjs",
+    "demo": "node --import tsx scripts/build-demo-2.4.ts",
+    "terrain:atlas": "node --import tsx scripts/build-terrain-atlas.ts",
+    "worker:smoke": "node --import tsx scripts/worker-smoke-2.4.ts"
+  },
+  "dependencies": {
+    "@redblobgames/prng": "file:vendor/prng",
+    "d3-delaunay": "^6.0.4",
+    "delaunator": "^5.0.1",
+    "fast-2d-poisson-disk-sampling": "^1.0.3",
+    "flatqueue": "^2.0.3",
+    "gl-matrix": "^3.4.4",
+    "hash-int": "^1.0.0",
+    "pixi.js": "^8.19.0",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "simplex-noise": "^4.0.3"
+  },
+  "devDependencies": {
+    "@types/d3-delaunay": "^6.0.4",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "electron": "^43.1.0",
+    "esbuild": "^0.28.1",
+    "tsx": "^4.23.0",
+    "typescript": "^7.0.2",
+    "vite": "^8.1.4"
+  },
+  "main": "desktop/main.cjs",
+  "allowScripts": {
+    "electron": true
+  }
+}

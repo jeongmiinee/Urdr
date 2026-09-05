@@ -1,0 +1,25 @@
+{
+  "formatVersion": 1,
+  "engineVersion": "3.8",
+  "required": [
+    "Data/Demos/demoProjectData.json.gz",
+    "Data/Demos/demoProjectData.en.json.gz",
+    "Localization/ui.ko.json",
+    "Localization/ui.en.json",
+    "Graphics/heraldry-catalog.json",
+    "Templates/document-templates.json",
+    "Licenses/THIRD_PARTY_NOTICES.md"
+  ],
+  "optionalFeatures": {
+    "speech": [
+      "Data/Speech/IMS-Toucan/README.txt",
+      "Data/Speech/IMS-Toucan/manifest.json",
+      "Data/Speech/IMS-Toucan/LICENSE-IMS-Toucan.txt",
+      "Data/Speech/IMS-Toucan/PYTHON_PACKAGES.txt",
+      "Data/Speech/IMS-Toucan/python/python.exe",
+      "Data/Speech/IMS-Toucan/runner/ims_toucan_runner.py",
+      "Data/Speech/IMS-Toucan/Models/ToucanTTS.pt",
+      "Data/Speech/IMS-Toucan/Models/Vocoder.pt"
+    ]
+  }
+}

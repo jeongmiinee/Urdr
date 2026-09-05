@@ -1,0 +1,46 @@
+name: Electron 2.5 Reference
+
+on:
+  push:
+    paths:
+      - "src/**"
+      - "desktop/**"
+      - "public/mapgen4/**"
+      - "vendor/**"
+      - "scripts/*.mjs"
+      - "scripts/*-2.4.ts"
+      - "scripts/*-2.4.tsx"
+      - "package.json"
+      - "package-lock.json"
+      - "tsconfig*.json"
+      - "vite.config.ts"
+      - ".github/workflows/ci.yml"
+  pull_request:
+    paths:
+      - "src/**"
+      - "desktop/**"
+      - "public/mapgen4/**"
+      - "vendor/**"
+      - "scripts/*.mjs"
+      - "scripts/*-2.4.ts"
+      - "scripts/*-2.4.tsx"
+      - "package.json"
+      - "package-lock.json"
+      - "tsconfig*.json"
+      - "vite.config.ts"
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run smoke
+      - run: npm run ui:smoke
+      - run: npm run build
+      - run: npm run worker:smoke

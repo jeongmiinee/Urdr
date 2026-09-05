@@ -1,0 +1,26 @@
+name: URDR Engine Native
+
+on:
+  push:
+    paths:
+      - "native/urdr-wgpu/**"
+      - ".github/workflows/engine-native.yml"
+  pull_request:
+    paths:
+      - "native/urdr-wgpu/**"
+
+jobs:
+  rust:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: native/urdr-wgpu
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+      - run: cargo fmt --all -- --check
+      - run: cargo check --locked
+      - run: cargo test --locked
+      - run: cargo build --release --locked

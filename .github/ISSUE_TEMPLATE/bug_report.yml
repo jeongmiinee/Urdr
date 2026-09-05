@@ -1,0 +1,59 @@
+name: Bug report
+description: Report a reproducible URDR failure, regression, or visual artifact.
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: Please remove private world data before uploading logs or saves.
+  - type: input
+    id: version
+    attributes:
+      label: URDR version
+      placeholder: 4.4.0, source commit, or portable build name
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Planet or Region generation
+        - Map rendering or interaction
+        - Hydrology or terrain
+        - Climate or environment
+        - Wiki or timeline
+        - Heraldry, script, or dictionary
+        - Storage, loading, or packaging
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Include the first action that triggers the problem.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and actual result
+    validations:
+      required: true
+  - type: textarea
+    id: identity
+    attributes:
+      label: Deterministic identity
+      description: Seed, map/Region ID, surface/generator revisions, extent, zoom, and LOD when relevant.
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence
+      description: Attach screenshots and the relevant session/performance log excerpt.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I reproduced this with the same seed and camera when applicable.
+        - label: I removed credentials and private world content from attachments.

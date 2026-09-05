@@ -1,0 +1,17 @@
+URDR Engine 4.4 GitHub Source Export
+Generated (UTC): 2026-09-03T05:25:25.2508332Z
+
+Included:
+- active Rust/WGPU source and Cargo lockfile
+- development demos and non-speech runtime resources
+- Electron 2.5 UI/migration reference source
+- architecture, pipeline, persistence, diagnostics, contribution, and AI docs
+- GitHub workflows/templates and active packaging scripts
+
+Intentionally omitted:
+- Rust target directories and all generated outputs
+- portable executables/archives, logs, caches, and local saves
+- IMS-Toucan embedded Python runtime and model weights
+- Unity experiments and historical build artifact directories
+
+Install the optional speech package separately before portable-package validation.

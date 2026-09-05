@@ -1,0 +1,6 @@
+{
+  "formatVersion": 1,
+  "shapes": ["rectangle", "swallowtailRectangle", "square", "swallowtailSquare", "triangle", "shield", "circle", "diamond"],
+  "patterns": ["solid", "vertical", "horizontal", "diagonal", "chevron", "cross", "checkered"],
+  "clipToShape": true
+}

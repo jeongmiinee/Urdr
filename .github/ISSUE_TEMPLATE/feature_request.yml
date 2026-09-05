@@ -1,0 +1,27 @@
+name: Feature request
+description: Propose a scoped change to URDR.
+title: "[Feature] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe the user workflow or technical limitation.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: ownership
+    attributes:
+      label: Data ownership and compatibility
+      description: Note authoritative state, derived caches, timeline behavior, and save migration.
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: List observable outcomes and required performance or visual evidence.

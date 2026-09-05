@@ -1,0 +1,26 @@
+{
+  "engine": "IMS-Toucan",
+  "license": "Apache-2.0",
+  "provenance": "https://github.com/DigitalPhonetics/IMS-Toucan",
+  "required": [
+    "python/python.exe",
+    "PYTHON_PACKAGES.txt",
+    "engine/Modules",
+    "engine/Preprocessing",
+    "engine/Utility"
+  ],
+  "runner": {
+    "executable": "python/python.exe",
+    "script": "runner/ims_toucan_runner.py",
+    "workerScript": "runner/ims_toucan_worker.py",
+    "engineRoot": "engine"
+  },
+  "voices": [
+    {
+      "id": "ims-toucan-multilingual",
+      "language": "eng",
+      "model": "Models/ToucanTTS.pt",
+      "vocoder": "Models/Vocoder.pt"
+    }
+  ]
+}
