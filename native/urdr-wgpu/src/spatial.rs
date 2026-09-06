@@ -1,3 +1,8 @@
+// Test-only observer: the production generator and persisted surface stay unchanged.
+#[cfg(test)]
+#[path = "planet_landmass_diagnostics.rs"]
+mod planet_landmass_diagnostics;
+
 use std::sync::Arc;
 
 use rayon::prelude::*;
