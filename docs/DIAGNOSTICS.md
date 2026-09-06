@@ -53,6 +53,12 @@ Depending on the problem, export:
 
 Never use a debug display field as new physical authority.
 
+## Planet Landmass Export
+
+For output-preserving Planet components, six-seed landmass ablations, spherical
+metrics and the ignored exporter, see [Planet landmass diagnostics](PLANET_LANDMASS_DIAGNOSTICS.md).
+This is a separate observer of the parent Planet, not a Pass 8 algorithm change.
+
 ## Pass 8 Export
 
 ```powershell

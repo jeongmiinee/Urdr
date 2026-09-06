@@ -1,5 +1,11 @@
 # URDR Engine 4.4 Changelog
 
+## Planet Landmass Diagnostics
+
+- Added a test-only Planet observer with frozen six-seed legacy output checksums and full EarthLike config fixtures.
+- Added an explicit ignored component/ablation exporter with spherical area, connectivity, coast, width-proxy and plate-correlation metrics; fixed-threshold and re-quantile results are separate.
+- Kept production generation formulas, Planet/Region sampling, persistent schema and Non-Procedural modules unchanged. See `docs/PLANET_LANDMASS_DIAGNOSTICS.md` for metric definitions and resolution limits.
+
 ## Terrain Pipeline Pass 6
 
 - Established a versioned Planet-to-Region terrain contract: old saves retain recipe revision 1 while newly generated maps persist recipe revision 2 and their parent world seed, selection bearing, and planet radius.
