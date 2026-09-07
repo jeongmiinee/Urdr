@@ -65,7 +65,11 @@ impl Grid {
         self.width * self.height
     }
 
-    fn components(&self, mask: &[bool], triangulated: bool) -> (Vec<usize>, Vec<Vec<usize>>) {
+    pub(super) fn components(
+        &self,
+        mask: &[bool],
+        triangulated: bool,
+    ) -> (Vec<usize>, Vec<Vec<usize>>) {
         let mut labels = vec![usize::MAX; mask.len()];
         let mut groups = Vec::new();
         for start in 0..mask.len() {
@@ -129,7 +133,7 @@ impl Grid {
         distances
     }
 
-    fn coast_distances(&self, mask: &[bool]) -> Vec<f64> {
+    pub(super) fn coast_distances(&self, mask: &[bool]) -> Vec<f64> {
         let mut starts = Vec::new();
         for i in 0..mask.len() {
             if mask[i] {
@@ -146,7 +150,7 @@ impl Grid {
         self.distances(mask, &starts, f64::INFINITY)
     }
 
-    fn morphology(&self, mask: &[bool], widths: &[f64]) -> Value {
+    pub(super) fn morphology(&self, mask: &[bool], widths: &[f64]) -> Value {
         let (parents, groups) = self.components(mask, false);
         let distances = self.coast_distances(mask);
         let mut levels = Vec::new();

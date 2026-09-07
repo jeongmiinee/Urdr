@@ -1,0 +1,226 @@
+{
+  "earthlike_0_draft": {
+    "threshold_bits": 1043780735,
+    "raw_h": "5f4fb4811f243f86",
+    "elevation": "6574e8b612447782",
+    "terrain": "ef300f3b792e1db4",
+    "water": "faa036e3a94ea29f"
+  },
+  "earthlike_1_draft": {
+    "threshold_bits": 1049643454,
+    "raw_h": "d811d2d4cc743e9e",
+    "elevation": "0844f0ea210c666d",
+    "terrain": "3dcff191a0439ea9",
+    "water": "5a86d10772a6e93a"
+  },
+  "earthlike_42_draft": {
+    "threshold_bits": 1039969630,
+    "raw_h": "471111a6261557c7",
+    "elevation": "46aff21d4f2942af",
+    "terrain": "ef4fe9027ef3c0c1",
+    "water": "db6a525380280f3d"
+  },
+  "earthlike_44_draft": {
+    "threshold_bits": 1052648944,
+    "raw_h": "1c11ff8980fa9c61",
+    "elevation": "d668b537de5e62b3",
+    "terrain": "1f4b563660624120",
+    "water": "96c0257730906352"
+  },
+  "earthlike_990500051_draft": {
+    "threshold_bits": 1043089714,
+    "raw_h": "416d4c0b4ad8906e",
+    "elevation": "6b656e63df162db2",
+    "terrain": "66354bf820a380d2",
+    "water": "4170edfc9f7f21c3"
+  },
+  "earthlike_20260906_draft": {
+    "threshold_bits": 1038599069,
+    "raw_h": "0946ffe035b668c5",
+    "elevation": "318c10537575422b",
+    "terrain": "cf46a5c31bc58ccc",
+    "water": "d71271f094f33332"
+  },
+  "low_fragmentation_intent_0_draft": {
+    "threshold_bits": 1044380870,
+    "raw_h": "33b531b185ac90fe",
+    "elevation": "0c8d62394893d428",
+    "terrain": "1a4fbb819d4ffcc6",
+    "water": "6f89492615cbcd58"
+  },
+  "low_fragmentation_intent_1_draft": {
+    "threshold_bits": 1049195037,
+    "raw_h": "5f67470f01b4c8fa",
+    "elevation": "c6c4c0d0ac65c078",
+    "terrain": "c7226a139a397f36",
+    "water": "a15ee42337cc13b6"
+  },
+  "low_fragmentation_intent_42_draft": {
+    "threshold_bits": 1038673428,
+    "raw_h": "07b6df77a5361c57",
+    "elevation": "be4d1af86e1761b4",
+    "terrain": "4941f7dfe5ec77a1",
+    "water": "768c2b05c2f9ac60"
+  },
+  "low_fragmentation_intent_44_draft": {
+    "threshold_bits": 1052531197,
+    "raw_h": "d542e318e989dc59",
+    "elevation": "9bde3276bb7432bb",
+    "terrain": "7eb5160baba1f5c0",
+    "water": "455071d3a7f1eb0b"
+  },
+  "low_fragmentation_intent_990500051_draft": {
+    "threshold_bits": 1042856969,
+    "raw_h": "f8e24baf0049233e",
+    "elevation": "fa29d84a40cea332",
+    "terrain": "78ec6e08f597c958",
+    "water": "c5b8fd104896b9e7"
+  },
+  "low_fragmentation_intent_20260906_draft": {
+    "threshold_bits": 1039278274,
+    "raw_h": "b8d73628bd347f53",
+    "elevation": "1ef53534466b049b",
+    "terrain": "a07ed6f7974eacef",
+    "water": "5de35f15fa520e1c"
+  },
+  "fragmented_continent_intent_0_draft": {
+    "threshold_bits": 1044864006,
+    "raw_h": "e9ee205eca4158a9",
+    "elevation": "41252d1636e23c9f",
+    "terrain": "7641f9e020e67f19",
+    "water": "57eb4e0f3a9185ee"
+  },
+  "fragmented_continent_intent_1_draft": {
+    "threshold_bits": 1050262433,
+    "raw_h": "389f052ea9865f28",
+    "elevation": "63ba89200c993990",
+    "terrain": "c035f53cd4180e10",
+    "water": "1f5418577581db9e"
+  },
+  "fragmented_continent_intent_42_draft": {
+    "threshold_bits": 1039469075,
+    "raw_h": "371179f8e98d86e9",
+    "elevation": "5d2d42735363836e",
+    "terrain": "813c946dfc0d5ec8",
+    "water": "52bc051ac8bbf391"
+  },
+  "fragmented_continent_intent_44_draft": {
+    "threshold_bits": 1051773295,
+    "raw_h": "55f0a8cf72eb17ad",
+    "elevation": "7a2b8899c2dcfbcf",
+    "terrain": "0cd4ee67d8d7ba55",
+    "water": "2255502a74143490"
+  },
+  "fragmented_continent_intent_990500051_draft": {
+    "threshold_bits": 1043774191,
+    "raw_h": "00daf68a92ac3d11",
+    "elevation": "4ecc7d291780c24f",
+    "terrain": "c4f75ad78acc3a5b",
+    "water": "3081a79ea0626d25"
+  },
+  "fragmented_continent_intent_20260906_draft": {
+    "threshold_bits": 1028859125,
+    "raw_h": "1cc7d72e9ac966fa",
+    "elevation": "59b15121b719f496",
+    "terrain": "33ed6cf6e3a94007",
+    "water": "1970e9f61ab3798c"
+  },
+  "archipelago_intent_0_draft": {
+    "threshold_bits": 1048447111,
+    "raw_h": "724ad8458fa4a0d7",
+    "elevation": "fb4edf6a767fc192",
+    "terrain": "64af8b4dbb97b54f",
+    "water": "19ae6ff9f47e2f71"
+  },
+  "archipelago_intent_1_draft": {
+    "threshold_bits": 1054428222,
+    "raw_h": "de62881e25df2170",
+    "elevation": "5f10301cdb6d3064",
+    "terrain": "57c6b3e2c3834281",
+    "water": "1c889037d88e28c9"
+  },
+  "archipelago_intent_42_draft": {
+    "threshold_bits": 1052277289,
+    "raw_h": "702fa4efdf2779b7",
+    "elevation": "a39564eaca20f34c",
+    "terrain": "88673f4954b58b28",
+    "water": "1b4eb93a31ca3463"
+  },
+  "archipelago_intent_44_draft": {
+    "threshold_bits": 1055632153,
+    "raw_h": "340aa87df45146af",
+    "elevation": "eb8f18230d344236",
+    "terrain": "2928d0a20a30749e",
+    "water": "86313454ca928fed"
+  },
+  "archipelago_intent_990500051_draft": {
+    "threshold_bits": 1050123636,
+    "raw_h": "931b1355b367c8cf",
+    "elevation": "b6d1a83541503a82",
+    "terrain": "b47b1c5ca2e29068",
+    "water": "08e4032f811d7898"
+  },
+  "archipelago_intent_20260906_draft": {
+    "threshold_bits": 1044434858,
+    "raw_h": "c9cab320f318dc8f",
+    "elevation": "3cbad440572e86bb",
+    "terrain": "950f7a334aa335b1",
+    "water": "4c9333a26d4ce5da"
+  },
+  "earthlike_0_normal": {
+    "threshold_bits": 1043792597,
+    "raw_h": "eed73ac5d0bccd69",
+    "elevation": "8da34af9d9b10f0b",
+    "terrain": "e30f2a9e7ad0d499",
+    "water": "f675b20b95c74808"
+  },
+  "earthlike_990500051_normal": {
+    "threshold_bits": 1043089646,
+    "raw_h": "7c25d774a58f17b5",
+    "elevation": "3eb56dc585fcb75a",
+    "terrain": "f828688c318990d4",
+    "water": "2b17dbf15a4e4193"
+  },
+  "low_fragmentation_intent_0_normal": {
+    "threshold_bits": 1044393165,
+    "raw_h": "5c542fab0ee8c87c",
+    "elevation": "78501410725c81ef",
+    "terrain": "98d68f4528979e72",
+    "water": "c58b8e58950a1322"
+  },
+  "low_fragmentation_intent_990500051_normal": {
+    "threshold_bits": 1042852997,
+    "raw_h": "249a2d7b4031cc1c",
+    "elevation": "c11605377bdb43be",
+    "terrain": "8b5ec5eaabafc6e4",
+    "water": "81d1c86b531f8731"
+  },
+  "fragmented_continent_intent_0_normal": {
+    "threshold_bits": 1044857692,
+    "raw_h": "16ee1744983e5132",
+    "elevation": "0d4ed5278777ecf7",
+    "terrain": "04d891f8c85ed3a4",
+    "water": "0795360c4bd7519b"
+  },
+  "fragmented_continent_intent_990500051_normal": {
+    "threshold_bits": 1043772367,
+    "raw_h": "3fa5b08355c42ddb",
+    "elevation": "0a80eddc9ce7fb96",
+    "terrain": "43d4baad2363d337",
+    "water": "fb87e99cb54dc208"
+  },
+  "archipelago_intent_0_normal": {
+    "threshold_bits": 1048452734,
+    "raw_h": "f47de14b62f79900",
+    "elevation": "84343d4a688182b3",
+    "terrain": "67ee108ddfe3dac7",
+    "water": "5b39176fd39bebe6"
+  },
+  "archipelago_intent_990500051_normal": {
+    "threshold_bits": 1050126818,
+    "raw_h": "22cf881051a86a8d",
+    "elevation": "0b405bfb4e42a6d8",
+    "terrain": "1dfe8a351e1b7e28",
+    "water": "a5728eeb5846aeeb"
+  }
+}

@@ -5,6 +5,9 @@ use std::fs::{self, File};
 use std::io::{BufWriter, Write};
 use std::path::Path;
 
+#[path = "planet_landmass_candidate_export.rs"]
+mod candidate_export;
+
 const LAND: [u8; 3] = [199, 190, 148];
 const WATER: [u8; 3] = [20, 43, 65];
 

@@ -5,6 +5,8 @@ use super::*;
 use serde_json::{Value, json};
 use std::f64::consts::{FRAC_PI_2, PI, TAU};
 
+#[path = "planet_landmass_candidate.rs"]
+mod candidate;
 #[path = "planet_landmass_export.rs"]
 mod export;
 #[path = "planet_landmass_metrics.rs"]

@@ -1,0 +1,1890 @@
+[
+  {
+    "id": "earthlike_0_draft",
+    "profile": "earthlike",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 0,
+      "presetSource": "earthLike",
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 12,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.55,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.45,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "earthlike_1_draft",
+    "profile": "earthlike",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 1,
+      "presetSource": "earthLike",
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 12,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.55,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.45,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "earthlike_42_draft",
+    "profile": "earthlike",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 42,
+      "presetSource": "earthLike",
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 12,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.55,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.45,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "earthlike_44_draft",
+    "profile": "earthlike",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 44,
+      "presetSource": "earthLike",
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 12,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.55,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.45,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "earthlike_990500051_draft",
+    "profile": "earthlike",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 990500051,
+      "presetSource": "earthLike",
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 12,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.55,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.45,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "earthlike_20260906_draft",
+    "profile": "earthlike",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 20260906,
+      "presetSource": "earthLike",
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 12,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.55,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.45,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "low_fragmentation_intent_0_draft",
+    "profile": "low_fragmentation_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 0,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 12,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.1,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.1,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "low_fragmentation_intent_1_draft",
+    "profile": "low_fragmentation_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 1,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 12,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.1,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.1,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "low_fragmentation_intent_42_draft",
+    "profile": "low_fragmentation_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 42,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 12,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.1,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.1,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "low_fragmentation_intent_44_draft",
+    "profile": "low_fragmentation_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 44,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 12,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.1,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.1,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "low_fragmentation_intent_990500051_draft",
+    "profile": "low_fragmentation_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 990500051,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 12,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.1,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.1,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "low_fragmentation_intent_20260906_draft",
+    "profile": "low_fragmentation_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 20260906,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 12,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.1,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.1,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "fragmented_continent_intent_0_draft",
+    "profile": "fragmented_continent_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 0,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 16,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.9,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.75,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "fragmented_continent_intent_1_draft",
+    "profile": "fragmented_continent_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 1,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 16,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.9,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.75,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "fragmented_continent_intent_42_draft",
+    "profile": "fragmented_continent_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 42,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 16,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.9,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.75,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "fragmented_continent_intent_44_draft",
+    "profile": "fragmented_continent_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 44,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 16,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.9,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.75,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "fragmented_continent_intent_990500051_draft",
+    "profile": "fragmented_continent_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 990500051,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 16,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.9,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.75,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "fragmented_continent_intent_20260906_draft",
+    "profile": "fragmented_continent_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 20260906,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 16,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.9,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.75,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "archipelago_intent_0_draft",
+    "profile": "archipelago_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 0,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.85
+      },
+      "tectonics": {
+        "plateCount": 24,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.3,
+        "continentalFragmentation": 0.9,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.65,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "archipelago_intent_1_draft",
+    "profile": "archipelago_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 1,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.85
+      },
+      "tectonics": {
+        "plateCount": 24,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.3,
+        "continentalFragmentation": 0.9,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.65,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "archipelago_intent_42_draft",
+    "profile": "archipelago_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 42,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.85
+      },
+      "tectonics": {
+        "plateCount": 24,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.3,
+        "continentalFragmentation": 0.9,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.65,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "archipelago_intent_44_draft",
+    "profile": "archipelago_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 44,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.85
+      },
+      "tectonics": {
+        "plateCount": 24,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.3,
+        "continentalFragmentation": 0.9,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.65,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "archipelago_intent_990500051_draft",
+    "profile": "archipelago_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 990500051,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.85
+      },
+      "tectonics": {
+        "plateCount": 24,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.3,
+        "continentalFragmentation": 0.9,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.65,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "archipelago_intent_20260906_draft",
+    "profile": "archipelago_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 20260906,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.85
+      },
+      "tectonics": {
+        "plateCount": 24,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.3,
+        "continentalFragmentation": 0.9,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.65,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "draft"
+    }
+  },
+  {
+    "id": "earthlike_0_normal",
+    "profile": "earthlike",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 0,
+      "presetSource": "earthLike",
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 12,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.55,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.45,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "normal"
+    }
+  },
+  {
+    "id": "earthlike_990500051_normal",
+    "profile": "earthlike",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 990500051,
+      "presetSource": "earthLike",
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 12,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.55,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.45,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "normal"
+    }
+  },
+  {
+    "id": "low_fragmentation_intent_0_normal",
+    "profile": "low_fragmentation_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 0,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 12,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.1,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.1,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "normal"
+    }
+  },
+  {
+    "id": "low_fragmentation_intent_990500051_normal",
+    "profile": "low_fragmentation_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 990500051,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 12,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.1,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.1,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "normal"
+    }
+  },
+  {
+    "id": "fragmented_continent_intent_0_normal",
+    "profile": "fragmented_continent_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 0,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 16,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.9,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.75,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "normal"
+    }
+  },
+  {
+    "id": "fragmented_continent_intent_990500051_normal",
+    "profile": "fragmented_continent_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 990500051,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.71
+      },
+      "tectonics": {
+        "plateCount": 16,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.43,
+        "continentalFragmentation": 0.9,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.75,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "normal"
+    }
+  },
+  {
+    "id": "archipelago_intent_0_normal",
+    "profile": "archipelago_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 0,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.85
+      },
+      "tectonics": {
+        "plateCount": 24,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.3,
+        "continentalFragmentation": 0.9,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.65,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "normal"
+    }
+  },
+  {
+    "id": "archipelago_intent_990500051_normal",
+    "profile": "archipelago_intent",
+    "config": {
+      "schemaVersion": 1,
+      "generatorVersion": 2,
+      "calibrationVersion": 1,
+      "seed": 990500051,
+      "presetSource": null,
+      "physical": {
+        "radiusM": 6371000.0,
+        "massKg": 5.9722e+24,
+        "rotationPeriodHours": 24.0,
+        "axialTiltDeg": 23.4,
+        "axialAzimuthDeg": 78.70238572674839,
+        "orbitalPeriodDays": 365.0,
+        "stellarFluxWM2": 1361.0
+      },
+      "atmosphere": {
+        "atmosphericMassKg": 5.148e+18,
+        "composition": {
+          "nitrogen": 0.78084,
+          "oxygen": 0.20946,
+          "carbonDioxide": 0.00042,
+          "methane": 2e-06,
+          "other": 0.009278
+        },
+        "greenhouseStrength": 0.62
+      },
+      "hydrosphere": {
+        "waterInventoryKg": 1.386e+21,
+        "targetOceanCoverage": 0.85
+      },
+      "tectonics": {
+        "plateCount": 24,
+        "activity": 0.55,
+        "continentalCrustFraction": 0.3,
+        "continentalFragmentation": 0.9,
+        "cratonStability": 0.62,
+        "orogenicActivity": 0.58,
+        "riftActivity": 0.65,
+        "volcanicActivity": 0.48
+      },
+      "geology": {
+        "maturity": 0.58,
+        "lithologicalDiversity": 0.65
+      },
+      "surface": {
+        "erosionStrength": 0.62,
+        "sedimentMobility": 0.55,
+        "moistureBias": 0.58,
+        "cryosphereTendency": 0.24
+      },
+      "biosphere": {
+        "strength": "earthLike"
+      },
+      "quality": "normal"
+    }
+  }
+]
