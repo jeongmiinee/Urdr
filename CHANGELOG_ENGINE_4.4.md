@@ -1,5 +1,11 @@
 # URDR Engine 4.4 Changelog
 
+## Planet Axial Orientation Diagnostics
+
+- Added a test-only 258-seed plate/noise rotation factorial exporter with equal-area cap controls, spherical latitude statistics, rigid-geometry checks and production elevation replay.
+- Documented weak detected XYZ cap bias, separate plate/noise contributions, and the existing longitude-dependent pole sampler. Production generation and sampling semantics remain unchanged.
+- See `docs/PLANET_AXIAL_BIAS_DIAGNOSTICS.md`; generated ensemble data and the full report stay outside Git.
+
 ## Planet Landmass Candidate 1 Evaluation (Stage 3)
 
 - Added test-only all-plate continuous crust and relative-Euler-motion boundary candidates; kept production Planet generation, recipes, persistent schema and other development tracks unchanged.

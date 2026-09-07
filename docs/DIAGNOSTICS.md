@@ -1,5 +1,8 @@
 # Diagnostics and Performance Workflow
 
+For production Planet axis, pole-sampler, and paired plate/noise rotation audits,
+see [axial orientation diagnostics](PLANET_AXIAL_BIAS_DIAGNOSTICS.md).
+
 For test-only Planet Candidate 1 experiments (continuous crust and kinematic
 boundary relief), see [Stage 3 evaluation](PLANET_LANDMASS_CANDIDATE_EVALUATION.md).
 This workflow does not promote the candidate to the production generator.
