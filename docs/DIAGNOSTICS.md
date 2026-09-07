@@ -1,5 +1,9 @@
 # Diagnostics and Performance Workflow
 
+For test-only Planet Candidate 1 experiments (continuous crust and kinematic
+boundary relief), see [Stage 3 evaluation](PLANET_LANDMASS_CANDIDATE_EVALUATION.md).
+This workflow does not promote the candidate to the production generator.
+
 ## Principle
 
 Do not tune map algorithms from a screenshot alone. First establish the

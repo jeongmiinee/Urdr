@@ -1,5 +1,12 @@
 # URDR Engine 4.4 Changelog
 
+## Planet Landmass Candidate 1 Evaluation (Stage 3)
+
+- Added test-only all-plate continuous crust and relative-Euler-motion boundary candidates; kept production Planet generation, recipes, persistent schema and other development tracks unchanged.
+- Added 32 full config fixtures with pre-candidate legacy snapshots, eight variants, separate fixed/cell-quantile/spherical-area threshold comparisons, and q topology persistence including neck/strait proxies.
+- Added field continuity/contrast, kinematic sign/amplitude, attribution, deterministic replay and legacy preservation checks. The explicit ignored exporter writes reproducible component/mask/overlay evidence outside Git.
+- See `docs/PLANET_LANDMASS_CANDIDATE_EVALUATION.md` for methods, results, limitations and the experimental-only boundary.
+
 ## Planet Landmass Diagnostics
 
 - Added a test-only Planet observer with frozen six-seed legacy output checksums and full EarthLike config fixtures.
