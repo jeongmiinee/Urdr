@@ -403,6 +403,14 @@ impl PlanetSurface {
         if self.is_empty() {
             return PlanetSurfaceSample::default();
         }
+        // Allow only the machine-scale cos(pi/2) residue of an exact axis.
+        if position.x.hypot(position.y) <= f64::EPSILON * position.z.abs() {
+            return self.sample_pole(if position.z >= 0.0 {
+                0
+            } else {
+                self.height - 1
+            });
+        }
         let (latitude, longitude) = position.latitude_longitude_rad();
         let normalized_x = (longitude + std::f64::consts::PI) / std::f64::consts::TAU;
         let normalized_y = (std::f64::consts::FRAC_PI_2 - latitude) / std::f64::consts::PI;
@@ -417,6 +425,13 @@ impl PlanetSurface {
     pub fn sample_interpolated(&self, position: PlanetPosition) -> PlanetSurfaceSample {
         if self.is_empty() {
             return PlanetSurfaceSample::default();
+        }
+        if position.x.hypot(position.y) <= f64::EPSILON * position.z.abs() {
+            return self.sample_pole(if position.z >= 0.0 {
+                0
+            } else {
+                self.height - 1
+            });
         }
         let (latitude, longitude) = position.latitude_longitude_rad();
         let x = (longitude + std::f64::consts::PI) / std::f64::consts::TAU * f64::from(self.width)
@@ -443,25 +458,74 @@ impl PlanetSurface {
             let bottom = bottom_left + (bottom_right - bottom_left) * tx;
             top + (bottom - top) * ty
         };
-        let elevation_m = bilinear(
+        let mut elevation_m = bilinear(
             top_left.elevation_m,
             top_right.elevation_m,
             bottom_left.elevation_m,
             bottom_right.elevation_m,
         );
-        let temperature_c = bilinear(
+        let mut temperature_c = bilinear(
             top_left.temperature_c,
             top_right.temperature_c,
             bottom_left.temperature_c,
             bottom_right.temperature_c,
         );
-        let moisture = bilinear(
+        let mut moisture = bilinear(
             top_left.moisture,
             top_right.moisture,
             bottom_left.moisture,
             bottom_right.moisture,
         )
         .clamp(0.0, 1.0);
+        // Only the unsampled half-cell between the outer ring and the pole.
+        // atan2 retains near-axis distances that asin(z) can round to pi/2.
+        if y < 0.0 || y > f64::from(self.height - 1) {
+            let pole_distance = position.x.hypot(position.y).atan2(position.z.abs());
+            let ring_weight = (pole_distance * (2.0 * f64::from(self.height))
+                / std::f64::consts::PI)
+                .clamp(0.0, 1.0) as f32;
+            if ring_weight < 1.0 {
+                let pole = self.sample_pole(if position.z >= 0.0 {
+                    0
+                } else {
+                    self.height - 1
+                });
+                elevation_m = pole.elevation_m + (elevation_m - pole.elevation_m) * ring_weight;
+                temperature_c =
+                    pole.temperature_c + (temperature_c - pole.temperature_c) * ring_weight;
+                moisture = pole.moisture + (moisture - pole.moisture) * ring_weight;
+            }
+        }
+        PlanetSurfaceSample {
+            elevation_m,
+            temperature_c,
+            moisture,
+            terrain: classify_planet_terrain(elevation_m, temperature_c, moisture),
+            water: elevation_m <= self.sea_level_m,
+        }
+    }
+
+    fn sample_pole(&self, row: u32) -> PlanetSurfaceSample {
+        // Equal longitude intervals: the mean is the integral mean of the
+        // periodic linear ring, independent of a chosen meridian. No new row.
+        let start = row as usize * self.width as usize;
+        let end = start + self.width as usize;
+        let sum_elevation: i64 = self.elevation_m[start..end]
+            .iter()
+            .map(|&v| i64::from(v))
+            .sum();
+        let sum_temperature: i64 = self.temperature_tenths_c[start..end]
+            .iter()
+            .map(|&v| i64::from(v))
+            .sum();
+        let sum_moisture: u64 = self.moisture[start..end]
+            .iter()
+            .map(|&v| u64::from(v))
+            .sum();
+        let count = f64::from(self.width);
+        let elevation_m = (sum_elevation as f64 / count) as f32;
+        let temperature_c = (sum_temperature as f64 / (count * 10.0)) as f32;
+        let moisture = (sum_moisture as f64 / (count * 255.0)) as f32;
         PlanetSurfaceSample {
             elevation_m,
             temperature_c,
@@ -1780,6 +1844,269 @@ pub fn legacy_region_and_view(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    const POLE_LONGITUDES: [f64; 8] = [0., 45., 90., 135., 180., -45., -90., -135.];
+
+    fn pole_test_surface() -> PlanetSurface {
+        PlanetSurface {
+            width: 8,
+            height: 16,
+            sea_level_m: 0.,
+            elevation_m: Arc::new(
+                (0..128)
+                    .map(|i| (i % 8) * 400 - 1200 - (i / 8) * 40)
+                    .collect(),
+            ),
+            temperature_tenths_c: Arc::new((0..128).map(|i| (i % 8 + 1) * 100).collect()),
+            moisture: Arc::new((0..128).map(|i| (i % 8) * 32).collect()),
+            terrain: Arc::new(vec![PlanetSurface::TERRAIN_GRASSLAND; 128]),
+        }
+    }
+
+    fn assert_unique_poles(sample: fn(&PlanetSurface, PlanetPosition) -> PlanetSurfaceSample) {
+        let surface = pole_test_surface();
+        for (latitude, elevation) in [(90., 200.), (-90., -400.)] {
+            let expected = PlanetSurfaceSample {
+                elevation_m: elevation,
+                temperature_c: 45.,
+                moisture: 112. / 255.,
+                terrain: classify_planet_terrain(elevation, 45., 112. / 255.),
+                water: elevation <= 0.,
+            };
+            for longitude in POLE_LONGITUDES {
+                assert_eq!(
+                    sample(
+                        &surface,
+                        PlanetPosition::from_latitude_longitude_deg(latitude, longitude)
+                    ),
+                    expected,
+                    "pole {latitude}, longitude {longitude}"
+                );
+            }
+            assert_eq!(
+                sample(&surface, PlanetPosition::new(0., 0., latitude).unwrap()),
+                expected
+            );
+        }
+        // A cyclic longitude relabeling must not select a privileged column.
+        let mut shifted = surface.clone();
+        for row in Arc::make_mut(&mut shifted.elevation_m).chunks_mut(8) {
+            row.rotate_left(3);
+        }
+        for row in Arc::make_mut(&mut shifted.temperature_tenths_c).chunks_mut(8) {
+            row.rotate_left(3);
+        }
+        for row in Arc::make_mut(&mut shifted.moisture).chunks_mut(8) {
+            row.rotate_left(3);
+        }
+        for latitude in [90., -90.] {
+            let p = PlanetPosition::from_latitude_longitude_deg(latitude, 17.);
+            assert_eq!(sample(&surface, p), sample(&shifted, p));
+        }
+    }
+
+    #[test]
+    fn planet_pole_nearest_is_longitude_invariant() {
+        assert_unique_poles(PlanetSurface::sample);
+    }
+
+    #[test]
+    fn planet_pole_interpolated_is_longitude_invariant() {
+        assert_unique_poles(PlanetSurface::sample_interpolated);
+    }
+
+    #[test]
+    fn planet_pole_interpolation_converges_only_in_last_half_cell() {
+        let surface = pole_test_surface();
+        let half_cell_deg = 90. / f64::from(surface.height);
+        for sign in [1., -1.] {
+            let pole = surface
+                .sample_interpolated(PlanetPosition::from_latitude_longitude_deg(sign * 90., 0.));
+            let sample_ring = |fraction: f64| {
+                POLE_LONGITUDES.map(|lon| {
+                    surface.sample_interpolated(PlanetPosition::from_latitude_longitude_deg(
+                        sign * (90. - half_cell_deg * fraction),
+                        lon,
+                    ))
+                })
+            };
+            let span = |samples: &[PlanetSurfaceSample; 8]| {
+                samples
+                    .iter()
+                    .map(|s| s.elevation_m)
+                    .fold(f32::NEG_INFINITY, f32::max)
+                    - samples
+                        .iter()
+                        .map(|s| s.elevation_m)
+                        .fold(f32::INFINITY, f32::min)
+            };
+            let ring = sample_ring(1.);
+            let ring_span = span(&ring);
+            assert!(ring_span > 1000.);
+            let mut previous = ring_span;
+            for fraction in [0.75, 0.5, 0.1, 0.01, 0.0001] {
+                let near = sample_ring(fraction);
+                let actual_span = span(&near);
+                assert!(actual_span > 0. && actual_span < previous);
+                assert!((actual_span / ring_span - fraction as f32).abs() < 2e-6);
+                for (value, outer) in near.iter().zip(ring) {
+                    for (v, p, r) in [
+                        (value.elevation_m, pole.elevation_m, outer.elevation_m),
+                        (value.temperature_c, pole.temperature_c, outer.temperature_c),
+                        (value.moisture, pole.moisture, outer.moisture),
+                    ] {
+                        assert!((v - (p + (r - p) * fraction as f32)).abs() < 0.002);
+                    }
+                }
+                previous = actual_span;
+            }
+            for lon in POLE_LONGITUDES {
+                let p = PlanetPosition::from_latitude_longitude_deg(
+                    sign * (90. - half_cell_deg * 0.1),
+                    lon,
+                );
+                let (_, longitude) = p.latitude_longitude_rad();
+                let x = (((longitude + std::f64::consts::PI) / std::f64::consts::TAU * 8.).floor()
+                    as i64)
+                    .rem_euclid(8) as u32;
+                assert_eq!(
+                    surface.sample(p),
+                    surface.sample_xy(x, if sign > 0. { 0 } else { 15 })
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn planet_pole_band_preserves_periodic_seam() {
+        let surface = pole_test_surface();
+        for lat in [0., 75., -75., 89., -89., 90., -90.] {
+            for lon in [-180., -179.999, 179.999] {
+                let a = PlanetPosition::from_latitude_longitude_deg(lat, lon);
+                let b = PlanetPosition::from_latitude_longitude_deg(lat, lon + 360.);
+                assert_eq!(surface.sample(a), surface.sample(b));
+                let sa = surface.sample_interpolated(a);
+                let sb = surface.sample_interpolated(b);
+                assert!((sa.elevation_m - sb.elevation_m).abs() < 0.002);
+                assert!((sa.temperature_c - sb.temperature_c).abs() < 1e-5);
+                assert!((sa.moisture - sb.moisture).abs() < 1e-6);
+                assert_eq!((sa.terrain, sa.water), (sb.terrain, sb.water));
+            }
+            let left = surface.sample_interpolated(PlanetPosition::from_latitude_longitude_deg(
+                lat,
+                180. - 1e-7,
+            ));
+            let right = surface.sample_interpolated(PlanetPosition::from_latitude_longitude_deg(
+                lat,
+                -180. + 1e-7,
+            ));
+            assert!((left.elevation_m - right.elevation_m).abs() < 0.002);
+        }
+    }
+
+    fn pole_checkpoint_hash(bytes: impl IntoIterator<Item = u8>) -> u64 {
+        bytes.into_iter().fold(0xcbf2_9ce4_8422_2325, |hash, byte| {
+            (hash ^ u64::from(byte)).wrapping_mul(0x100_0000_01b3)
+        })
+    }
+
+    fn pole_sample_hash(surface: &PlanetSurface, longitudes: &[f64]) -> u64 {
+        let mut bytes = Vec::new();
+        for latitude in [0., 15., -15., 45., -45., 75., -75.] {
+            for &longitude in longitudes {
+                let p = PlanetPosition::from_latitude_longitude_deg(latitude, longitude);
+                for s in [surface.sample(p), surface.sample_interpolated(p)] {
+                    bytes.extend(s.elevation_m.to_bits().to_le_bytes());
+                    bytes.extend(s.temperature_c.to_bits().to_le_bytes());
+                    bytes.extend(s.moisture.to_bits().to_le_bytes());
+                    bytes.extend([s.terrain, u8::from(s.water)]);
+                }
+            }
+        }
+        pole_checkpoint_hash(bytes)
+    }
+
+    #[test]
+    fn planet_pole_generated_payload_and_nonpolar_samples_match_checkpoint() {
+        let mut actual = Vec::new();
+        for seed in [47, 253] {
+            let config = PlanetGenerationConfig {
+                seed,
+                quality: GenerationQuality::Draft,
+                ..PlanetGenerationConfig::default()
+            };
+            let geology = CausalGeologyModel::synthesize_with_controls(
+                config.stable_subseed("geology"),
+                &config.tectonics,
+                &config.geology,
+            );
+            let surface = PlanetSurface::generate(&config, &geology);
+            let before = serde_json::to_vec(&(&config, &geology, &surface)).unwrap();
+            actual.push([
+                pole_checkpoint_hash(before.iter().copied()),
+                pole_sample_hash(&surface, &POLE_LONGITUDES),
+                pole_sample_hash(&surface, &[-180., 180., -179.999, 179.999]),
+            ]);
+            for latitude in [90., -90., 89.9, -89.9] {
+                for longitude in POLE_LONGITUDES {
+                    let p = PlanetPosition::from_latitude_longitude_deg(latitude, longitude);
+                    surface.sample(p);
+                    surface.sample_interpolated(p);
+                }
+            }
+            assert_eq!(
+                serde_json::to_vec(&(&config, &geology, &surface)).unwrap(),
+                before
+            );
+        }
+        // Captured on 362dc7e before modifying either production sampler.
+        assert_eq!(
+            actual,
+            vec![
+                [
+                    57_574_070_049_017_157,
+                    16_672_457_438_135_602_903,
+                    18_078_261_119_242_967_854
+                ],
+                [
+                    516_311_901_295_473_647,
+                    8_447_258_613_008_495_066,
+                    355_561_765_486_420_254
+                ],
+            ]
+        );
+    }
+
+    #[test]
+    fn planet_pole_historical_south_47_and_253_have_unique_samples() {
+        for seed in [47, 253] {
+            let config = PlanetGenerationConfig {
+                seed,
+                quality: GenerationQuality::Draft,
+                ..PlanetGenerationConfig::default()
+            };
+            let geology = CausalGeologyModel::synthesize_with_controls(
+                config.stable_subseed("geology"),
+                &config.tectonics,
+                &config.geology,
+            );
+            let surface = PlanetSurface::generate(&config, &geology);
+            let old_ring = (0..surface.width)
+                .map(|x| surface.sample_xy(x, surface.height - 1))
+                .collect::<Vec<_>>();
+            assert!(
+                old_ring.iter().any(|s| s.water) && old_ring.iter().any(|s| !s.water),
+                "historical witness seed {seed}"
+            );
+            let p = PlanetPosition::from_latitude_longitude_deg(-90., 0.);
+            let expected = surface.sample(p);
+            for longitude in POLE_LONGITUDES {
+                let p = PlanetPosition::from_latitude_longitude_deg(-90., longitude);
+                assert_eq!(surface.sample(p), expected, "seed {seed}");
+                assert_eq!(surface.sample_interpolated(p), expected, "seed {seed}");
+            }
+        }
+    }
 
     #[test]
     fn planet_positions_are_normalized_and_finite() {

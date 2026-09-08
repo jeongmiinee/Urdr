@@ -1,5 +1,12 @@
 # URDR Engine 4.4 Changelog
 
+## Planet Pole Sampler Maintenance
+
+- Reconstructed each missing exact pole from the longitude-invariant mean of its outer latitude ring. Both nearest and interpolated sampling now return one value for the same physical pole.
+- Limited continuous ring-to-pole blending to the interpolated sampler's last half-cell band; preserved ordinary latitude calculations, the periodic seam, and near-pole nearest selection.
+- Added pole/convergence regressions, historical south-pole seeds 47/253, and pre-fix generated-payload/nonpolar sample fingerprints. Retained the historical raw-ring witness with corrected sampler assertions.
+- Generated/stored PlanetSurface arrays, landmass semantics, recipes/schema and Region algorithms remain unchanged. This independent maintenance does not start Stage 4 GCDG / Stage 4A.
+
 ## Planet Axial Orientation Diagnostics
 
 - Added a test-only 258-seed plate/noise rotation factorial exporter with equal-area cap controls, spherical latitude statistics, rigid-geometry checks and production elevation replay.

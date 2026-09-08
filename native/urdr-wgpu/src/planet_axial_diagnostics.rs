@@ -473,7 +473,7 @@ fn planet_axial_observer_replays_production_and_axis_config_is_not_a_land_prior(
     assert_eq!(PlanetSurface::generate(&tilted, &geo), before);
 }
 #[test]
-fn planet_axial_pole_sampler_exposes_longitude_dependent_raster_limit() {
+fn planet_axial_pole_sampler_preserves_historical_ring_witness_and_unique_limit() {
     let s = PlanetSurface {
         width: 4,
         height: 2,
@@ -486,11 +486,12 @@ fn planet_axial_pole_sampler_exposes_longitude_dependent_raster_limit() {
     let a = PlanetPosition::from_latitude_longitude_deg(90., -135.);
     let b = PlanetPosition::from_latitude_longitude_deg(90., -45.);
     assert!(a.angular_distance_rad(b) < 1e-12);
-    assert_ne!(s.sample(a).water, s.sample(b).water);
-    assert_ne!(
-        s.sample_interpolated(a).water,
-        s.sample_interpolated(b).water
-    );
+    // The stored ring still witnesses the old clamped-column classification
+    // flip. Reconstructing the missing pole must not change those raw cells.
+    assert_ne!(s.sample_xy(0, 0).water, s.sample_xy(1, 0).water);
+    assert_eq!(s.sample(a), s.sample(b));
+    assert_eq!(s.sample_interpolated(a), s.sample_interpolated(b));
+    assert_eq!(s.sample(a).elevation_m, 0.);
 }
 #[test]
 #[ignore = "258-seed native Draft axial orientation exporter; explicit external output required"]
