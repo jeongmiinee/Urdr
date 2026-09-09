@@ -65,6 +65,10 @@ impl Grid {
         self.width * self.height
     }
 
+    pub(super) fn neighbors(&self, index: usize) -> &[(usize, f64)] {
+        &self.edges[index]
+    }
+
     pub(super) fn components(
         &self,
         mask: &[bool],

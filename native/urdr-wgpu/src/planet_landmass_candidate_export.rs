@@ -6,6 +6,9 @@ use super::*;
 mod analysis;
 use analysis::*;
 
+#[path = "planet_stage4a_diagnostics.rs"]
+mod stage4a;
+
 const VARIANTS: [&str; 8] = [
     "Legacy",
     "continuous_K",

@@ -1,5 +1,11 @@
 # URDR Engine 4.4 Changelog
 
+## Planet Stage 4A Topology Diagnostics
+
+- Added a test-only observer for the existing Frag990 and Low42 Draft counterexamples, with frozen core/port identities, q split path witnesses, explicit relation contradictions and decomposed geology evidence.
+- Reused existing K′/B′ and spherical metrics; imported compact historical Coast-first mask evidence without rerunning its generator. Major authority, flooded-water provenance and uncalibrated feasibility policy remain provisional or unresolved.
+- Added fidelity, preservation, determinism, geometry and semantic regression checks. Production generation, sampling, schema/migration and other tracks are unchanged; Stage 4B is not started. See `docs/PLANET_STAGE4A_DIAGNOSTICS.md`.
+
 ## Planet Pole Sampler Maintenance
 
 - Reconstructed each missing exact pole from the longitude-invariant mean of its outer latitude ring. Both nearest and interpolated sampling now return one value for the same physical pole.

@@ -7,6 +7,9 @@ For test-only Planet Candidate 1 experiments (continuous crust and kinematic
 boundary relief), see [Stage 3 evaluation](PLANET_LANDMASS_CANDIDATE_EVALUATION.md).
 This workflow does not promote the candidate to the production generator.
 
+For bounded, test-only stable core/port relations and decomposed geology evidence
+on the two critical counterexamples, see [Stage 4A observations](PLANET_STAGE4A_DIAGNOSTICS.md).
+
 ## Principle
 
 Do not tune map algorithms from a screenshot alone. First establish the
